@@ -14,6 +14,11 @@ class Shortener:
             else len(str(db.session.query(Url).count()))
         )
 
+    def convert_datetime_format(self, datetime_str):
+        datetime_obj = datetime.datetime.strptime(datetime_str, "%Y-%m-%dT%H:%M")
+        new_datetime_str = datetime_obj.strftime("%d-%m-%Y.%H:%M")
+        return new_datetime_str
+
     def generate_short_url(self):
         # Generate a random string of 6 characters.
         short_url = "".join([choice(self.chars) for _ in range(self.chars_len)])
@@ -68,3 +73,15 @@ class Shortener:
 
         # If the short URL does not exist, return None.
         return url if url is not None else None
+
+    def update_exp_date(self, short_url, expiration_date):
+        # Update the expiration date of a URL
+        url = Url.query.filter_by(short_url=short_url).first()
+        url.expiration_date = expiration_date
+        db.session.commit()
+
+    def delete_short_url(self, short_url):
+        # Delete the short URL from the database.
+        url = Url.query.filter_by(short_url=short_url).first()
+        db.session.delete(url)
+        db.session.commit()
