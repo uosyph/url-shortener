@@ -9,6 +9,90 @@ from database import *
 from shortener import *
 
 
+@app.route("/", methods=["GET", "POST"])
+def index():
+    msg = ""
+    short_url = None
+    current_time = datetime.datetime.now()
+    exp_date_min = (current_time + datetime.timedelta(minutes=5)).strftime(
+        "%Y-%m-%dT%H:%M"
+    )
+    exp_date_max = (current_time + datetime.timedelta(days=365 * 50)).strftime(
+        "%Y-%m-%dT%H:%M"
+    )
+
+    if request.method == "POST" and "url" in request.form:
+        long_url = request.form["url"]
+
+        if len(long_url) > 2048:
+            msg = "URL too long!"
+        elif len(long_url) < 6:
+            msg = "URL already short!!!"
+        elif not match(
+            r"^((http|https)://)?([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.)+[A-Za-z]{2,}$",
+            long_url,
+        ):
+            msg = "Doesn't look like a URL to me :|"
+        else:
+            if "loggedin" in session and session["loggedin"]:
+                if "is_permanent" in request.form:
+                    short_url = Shortener().shorten_url(
+                        long_url, is_permanent=True, user_id=session["id"]
+                    )
+                elif "exp_date" in request.form and request.form["exp_date"] != "":
+                    exp_date = datetime.datetime.strptime(
+                        Shortener().convert_datetime_format(request.form["exp_date"]),
+                        "%d-%m-%Y.%H:%M",
+                    )
+                    exp_date_min_formatted = datetime.datetime.strptime(
+                        Shortener().convert_datetime_format(exp_date_min),
+                        "%d-%m-%Y.%H:%M",
+                    )
+                    exp_date_max_formatted = datetime.datetime.strptime(
+                        Shortener().convert_datetime_format(exp_date_max),
+                        "%d-%m-%Y.%H:%M",
+                    )
+
+                    if (
+                        exp_date < exp_date_min_formatted
+                        or exp_date > exp_date_max_formatted
+                    ):
+                        msg = "Expiration date must be between 5 minutes from now to 50 years in the future"
+                    else:
+                        short_url = Shortener().shorten_url(
+                            long_url,
+                            exp_date.strftime("%d-%m-%Y.%H:%M"),
+                            user_id=session["id"],
+                        )
+                else:
+                    short_url = Shortener().shorten_url(long_url, user_id=session["id"])
+            else:
+                short_url = Shortener().shorten_url(long_url)
+
+    elif request.method == "POST":
+        msg = "Please fill out the form!"
+
+    return render_template(
+        "index.html",
+        msg=msg,
+        short_url=short_url,
+        exp_date_min=exp_date_min,
+        exp_date_max=exp_date_max,
+    )
+
+
+@app.route("/<short_url>")
+def redirect_url(short_url):
+    url = Url.query.filter_by(short_url=short_url).first()
+    if url is not None:
+        if not match("^(http|https)://", url.long_url):
+            return redirect(f"https://{url.long_url}")
+        else:
+            return redirect(url.long_url)
+    else:
+        abort(404)
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     logout()
@@ -99,6 +183,16 @@ def logout():
     session.pop("loggedin", None)
     session.pop("id", None)
     session.pop("username", None)
+    return redirect(url_for("index"))
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
+
+
+@app.errorhandler(401)
+def unauthorized(e):
     return redirect(url_for("index"))
 
 
