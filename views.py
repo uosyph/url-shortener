@@ -275,6 +275,81 @@ def account():
         abort(401)
 
 
+@app.route("/dashboard", methods=["GET", "POST"])
+def dashboard():
+    if "loggedin" in session and session["loggedin"]:
+        msg = ""
+        current_time = datetime.datetime.now()
+        exp_date_min = (current_time + datetime.timedelta(minutes=5)).strftime(
+            "%Y-%m-%dT%H:%M"
+        )
+        exp_date_max = (current_time + datetime.timedelta(days=365 * 50)).strftime(
+            "%Y-%m-%dT%H:%M"
+        )
+
+        urls = db.session.query(Url).where(Url.user_id == session["id"])
+        if urls.count() <= 0:
+            return render_template("dashboard.html")
+
+        if (
+            request.method == "POST"
+            and request.form["action"] == "save_url"
+            and request.form["value"] != ""
+        ):
+            if "is_permanent" in request.form:
+                url = Url.query.filter_by(short_url=request.form["value"]).first()
+                url.is_permanent = True
+                url.expiration_date = None
+                db.session.commit()
+                msg = f'URL <span class="go-url" id="text-glow">{request.form["value"]}</span> is not permanent <span id="text-glow">∞ ✨</span>'
+            elif "exp_date" in request.form and request.form["exp_date"] != "":
+                url = Url.query.filter_by(short_url=request.form["value"]).first()
+                exp_date = datetime.datetime.strptime(
+                    Shortener().convert_datetime_format(request.form["exp_date"]),
+                    "%d-%m-%Y.%H:%M",
+                )
+                exp_date_min_formatted = datetime.datetime.strptime(
+                    Shortener().convert_datetime_format(exp_date_min),
+                    "%d-%m-%Y.%H:%M",
+                )
+                exp_date_max_formatted = datetime.datetime.strptime(
+                    Shortener().convert_datetime_format(exp_date_max),
+                    "%d-%m-%Y.%H:%M",
+                )
+
+                if (
+                    exp_date < exp_date_min_formatted
+                    or exp_date > exp_date_max_formatted
+                ):
+                    msg = "Expiration date must be between 5 minutes from now to 50 years in the future"
+                else:
+                    url.is_permanent = False
+                    url.expiration_date = exp_date.strftime("%d-%m-%Y.%H:%M")
+                    db.session.commit()
+                    msg = f'URL <span class="go-url" id="text-glow">{request.form["value"]}</span> expiration date is not set to <span id="text-glow">{exp_date.strftime("%d-%m-%Y.%H:%M")}</span>'
+        elif (
+            request.method == "POST"
+            and request.form["action"] == "del_url"
+            and request.form["value"] != ""
+        ):
+            url = Url.query.filter_by(short_url=request.form["value"]).first()
+            db.session.delete(url)
+            db.session.commit()
+            msg = "URL deleted successfully!"
+            if urls.count() <= 0:
+                return render_template("dashboard.html", msg=msg)
+
+        return render_template(
+            "dashboard.html",
+            msg=msg,
+            urls=urls,
+            exp_date_min=exp_date_min,
+            exp_date_max=exp_date_max,
+        )
+    else:
+        abort(401)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
