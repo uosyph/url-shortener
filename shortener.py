@@ -14,6 +14,13 @@ class Shortener:
             else len(str(db.session.query(Url).count()))
         )
 
+    def check_datetime_format(self, datetime_str):
+        try:
+            datetime.datetime.strptime(datetime_str, "%d-%m-%Y.%H:%M")
+            return True
+        except:
+            return False
+
     def convert_datetime_format(self, datetime_str):
         datetime_obj = datetime.datetime.strptime(datetime_str, "%Y-%m-%dT%H:%M")
         new_datetime_str = datetime_obj.strftime("%d-%m-%Y.%H:%M")
