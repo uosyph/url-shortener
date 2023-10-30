@@ -9,6 +9,13 @@ from database import *
 from shortener import *
 
 
+@app.before_request
+def clear_trailing():
+    rp = request.path
+    if rp != "/" and rp.endswith("/"):
+        return redirect(rp[:-1])
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     msg = ""
@@ -184,6 +191,88 @@ def logout():
     session.pop("id", None)
     session.pop("username", None)
     return redirect(url_for("index"))
+
+
+@app.route("/account", methods=["GET", "POST"])
+def account():
+    if "loggedin" in session and session["loggedin"]:
+        msg = ""
+        user_token = User.query.filter_by(id=session["id"]).first().token
+
+        if (
+            request.method == "POST"
+            and "new-username" in request.form
+            and request.form["action"] == "update_username"
+        ):
+            username = request.form["new-username"]
+            user = User.query.filter_by(username=username).first()
+            current_user = User.query.filter_by(id=session["id"]).first()
+
+            if len(username) < 3 or len(username) > 16:
+                msg = "Username must be between 3 and 16 letters!"
+            elif not user:
+                current_user.username = username
+                db.session.commit()
+                session["username"] = current_user.username
+                msg = "Updated username successfully!"
+            else:
+                if username == current_user.username:
+                    msg = "Same username you have!"
+                else:
+                    msg = "Username is not available!"
+        elif (
+            request.method == "POST"
+            and "old-password" in request.form
+            and "new-password" in request.form
+            and "confirm-new-password" in request.form
+            and request.form["action"] == "update_password"
+        ):
+            old_password = request.form["old-password"]
+            new_password = request.form["new-password"]
+            confirm_new_password = request.form["confirm-new-password"]
+
+            user = User.query.filter_by(id=session["id"]).first()
+
+            if check_password_hash(user.password, old_password):
+                if len(new_password) < 6 or len(new_password) > 28:
+                    msg = "Password must be between 6 and 28 letters!"
+                elif confirm_new_password != new_password:
+                    msg = "Passwords don't match!"
+                elif new_password == old_password:
+                    msg = "New password can't be the same as the old password!"
+                else:
+                    hashed_password = generate_password_hash(new_password)
+                    user.password = hashed_password
+                    db.session.commit()
+                    msg = "Updated password successfully!"
+            else:
+                msg = "Password is wrong!"
+        elif request.method == "POST" and request.form["action"] == "gen_token":
+            user = User.query.filter_by(id=session["id"]).first()
+            token = encode(
+                {"id": user.id},
+                app.config["SECRET_KEY"],
+            )
+            user.token = token
+            db.session.commit()
+            msg = "Generated token successfully!"
+        elif request.method == "POST" and request.form["action"] == "del_token":
+            user = User.query.filter_by(id=session["id"]).first()
+            user.token = None
+            db.session.commit()
+            msg = "Deleted token successfully!"
+        elif request.method == "POST" and request.form["action"] == "delete":
+            user = User.query.filter_by(id=session["id"]).first()
+            db.session.delete(user)
+            db.session.commit()
+            msg = "Account deleted successfully!"
+            return logout()
+        elif request.method == "POST":
+            msg = "Please fill out the form!"
+
+        return render_template("account.html", msg=msg, user_token=user_token)
+    else:
+        abort(401)
 
 
 @app.errorhandler(404)

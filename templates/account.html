@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title_left %}Account | {% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/account.css') }}">
+<script src="{{ url_for('static', filename='scripts/copy.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Account Settings</h2>
+
+    <div class="content">
+        <input class="slider-radio" type="radio" name="slider" id="profile" checked>
+        <input class="slider-radio" type="radio" name="slider" id="security">
+        <input class="slider-radio" type="radio" name="slider" id="authn">
+
+        <div class="list">
+            <label for="profile" class="profile">
+                <span>Profile</span>
+            </label>
+            <label for="security" class="security">
+                <span>Security</span>
+            </label>
+            <label for="authn" class="authn">
+                <span>Authn</span>
+            </label>
+            <div class="slider"></div>
+        </div>
+
+        <div class="text-content">
+            {% if msg: %}<div class="form-msg">{{ msg }}</div>{% endif %}
+            <div class="profile text">
+                <div class="title">Update Username</div>
+                <p><b>Current username</b>: {{ session["username"] }}</p>
+                <form action="{{ url_for('account') }}" method="post">
+                    <input type="hidden" name="action" value="update_username">
+                    <div class="input-box">
+                        <input required class="form-field" type="text" name="new-username">
+                        <label for="new-username">New Username</label>
+                    </div>
+                    <input class="form-btn" type="submit" value="Update Username">
+                </form>
+
+                <hr>
+
+                <div class="title">Delete Account</div>
+                <p>Please note that, this action is unrecoverable, and CAN NOT be undone.</p>
+                <form action="{{ url_for('account') }}" method="post">
+                    <input type="hidden" name="action" value="delete">
+                    <input class="form-btn" id="danger-btn" type="submit" value="Delete Account">
+                </form>
+            </div>
+            <div class="security text">
+                <div class="title">Update Password</div>
+                <form action="{{ url_for('account') }}" method="post">
+                    <input type="hidden" name="action" value="update_password">
+                    <div class="input-box">
+                        <input required class="form-field" type="password" name="old-password">
+                        <label for="old-password">Old Password</label>
+                    </div>
+                    <div class="input-box">
+                        <input required class="form-field" type="password" name="new-password">
+                        <label for="new-password">New Password</label>
+                    </div>
+                    <div class="input-box">
+                        <input required class="form-field" type="password" name="confirm-new-password">
+                        <label for="confirm-new-password">Confirm Password</label>
+                    </div>
+                    <input class="form-btn" type="submit" value="Update Password">
+                </form>
+            </div>
+            <div class="authn text">
+                {% if user_token == None: %}
+                    <div class="title">Generate Token</div>
+                    <p>You can user this token to gain access to your account and URLs using the API.</p>
+                    <form action="{{ url_for('account') }}" method="post">
+                        <input type="hidden" name="action" value="gen_token">
+                        <input class="form-btn" type="submit" value="Generate Token">
+                    </form>
+                {% else %}
+                    <div class="title">Current Token</div>
+                    <div class="token-container">
+                        <input id="copy-text" type="text" value="{{ user_token }}" readonly>
+                        <button onclick="copyText()">Copy Token</button>
+                    </div>
+
+                    <hr>
+
+                    <div class="title">Generate a New Token</div>
+                    <p>This will delete the old token and generate a new one.</p>
+                    <form action="{{ url_for('account') }}" method="post">
+                        <input type="hidden" name="action" value="gen_token">
+                        <input class="form-btn" type="submit" value="Generate New Token">
+                    </form>
+
+                    <hr>
+
+                    <div class="title">Delete Token</div>
+                    <p>You can delete this token but always generate another one.</p>
+                    <form action="{{ url_for('account') }}" method="post">
+                        <input type="hidden" name="action" value="del_token">
+                        <input class="form-btn" id="danger-btn" type="submit" value="Delete Token">
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

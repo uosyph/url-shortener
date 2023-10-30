@@ -1,0 +1,219 @@
+.container {
+    margin: auto;
+    max-width: 45%;
+    padding: 50px 40px;
+    background: rgba(0, 0, 0, .5);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-bottom: 65px;
+}
+
+.container h2 {
+    margin: 0 0 45px;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.content .slider-radio {
+    display: none;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content .list {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 30%;
+    margin-right: 50px;
+}
+
+.content .list label {
+    cursor: pointer;
+    height: 60px;
+    line-height: 60px;
+    font-size: 22px;
+    font-weight: 500;
+    color: #ffffffd5;
+    margin-left: 20%;
+    transition: all 0.5s ease;
+    z-index: 10;
+}
+
+.content .list label:hover {
+    color: #BB86FC;
+}
+
+#profile:checked ~ .list label.profile,
+#security:checked ~ .list label.security,
+#authn:checked ~ .list label.authn {
+    color: #22272C;
+}
+
+.content .slider {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 60px;
+    width: 100%;
+    border-radius: 12px;
+    transition: all 0.5s ease;
+    background: #BB86FC;
+}
+
+#profile:checked ~ .list .slider {
+    top: 0;
+}
+
+#security:checked ~ .list .slider {
+    top: 60px;
+}
+
+#authn:checked ~ .list .slider {
+    top: 120px;
+}
+
+.content .text-content {
+    width: 70%;
+    height: 100%;
+    color: #ffffffda;
+}
+
+.content .text {
+    display: none;
+}
+
+.content .text .title {
+    color: #BB86FC;
+    font-size: 25px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.container .text p {
+    margin-bottom: 15px;
+}
+
+.container .text hr {
+    margin-block: 25px;
+}
+
+.container .text form .input-box {
+    position: relative;
+}
+
+.container .text form .form-field {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 25px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background: transparent;
+}
+
+.container .text form label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    pointer-events: none;
+    transition: .5s;
+}
+
+.container .text form .form-field:focus ~ label,
+.container .text form .form-field:valid ~ label {
+    top: -20px;
+    left: 0;
+    color: #BB86FC;
+    font-size: 12px;
+}
+
+.container .text form .form-btn {
+    width: 100%;
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+    color: #BB86FC;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    margin-top: 5px;
+    letter-spacing: 4px;
+    border: 1px solid #BB86FC;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.container .text form .form-btn:hover {
+    background: #BB86FC;
+    color: #fff;
+    box-shadow: 0 0 1px #BB86FC18,
+        0 0 15px #BB86FC18,
+        0 0 20px #BB86FC18,
+        0 0 30px #BB86FC18;
+}
+
+.content .text-content .profile {
+    display: block;
+}
+
+#profile:checked ~ .text-content .profile,
+#security:checked ~ .text-content .security,
+#authn:checked ~ .text-content .authn {
+    display: block;
+}
+
+#security:checked ~ .text-content .profile,
+#authn:checked ~ .text-content .profile {
+    display: none;
+}
+
+.text-content .form-msg {
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+#danger-btn {
+    color: #fc8686;
+    border: 1px solid #fc8686;
+}
+
+#danger-btn:hover {
+    background: #fc8686;
+    color: #fff;
+    box-shadow: 0 0 1px #fc868618,
+        0 0 15px #fc868618,
+        0 0 20px #fc868618,
+        0 0 30px #fc868618;
+}
+
+.container .security .title {
+    margin-bottom: 15px;
+}
+
+.container .token-container input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background: transparent;
+}
