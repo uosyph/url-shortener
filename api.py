@@ -190,18 +190,7 @@ def api_get(user):
                     short_url=data["url"], user_id=user.id
                 ).first()
                 if url is not None:
-                    return (
-                        jsonify(
-                            {
-                                "short_url": url.short_url,
-                                "long_url": url.long_url,
-                                "creation_date": url.creation_date,
-                                "expiration_date": url.expiration_date,
-                                "is_permanent": url.is_permanent,
-                            }
-                        ),
-                        200,
-                    )
+                    return jsonify({"url": url.long_url}), 200
                 else:
                     return jsonify({"error": "URL doesn't exist."})
     except:
@@ -214,9 +203,6 @@ def api_get(user):
                 json_url = {
                     "short_url": url.short_url,
                     "long_url": url.long_url,
-                    "creation_date": url.creation_date,
-                    "expiration_date": url.expiration_date,
-                    "is_permanent": url.is_permanent,
                 }
                 json_urls.append(json_url)
 
@@ -348,7 +334,26 @@ def api_delete(user):
     if user is None:
         return jsonify({"error": "Token is missing!"}), 401
 
-    return
+    try:
+        data = request.get_json()
+        if "url" not in data:
+            return jsonify({"error": "Missing required JSON field: url:str."}), 400
+        elif len(data["url"]) == 0:
+            return jsonify({"error": "URL is empty!"}), 400
+        elif len(data["url"]) > 12:
+            return jsonify({"error": "Well that's not a so short, ain't!"}), 400
+        elif len(data["url"]) < 4:
+            return jsonify({"error": "Oh, now it's too short :|"}), 400
+
+        url = Url.query.filter_by(short_url=data["url"], user_id=user.id).first()
+        if url is None:
+            return jsonify({"error": "URL doesn't exist."})
+
+        db.session.delete(url)
+        db.session.commit()
+        return jsonify({"massage": "Deleted URL successfully!"}), 200
+    except:
+        return jsonify({"error": "No JSON data provided."}), 400
 
 
 @app.route("/api/stats", methods=["GET"])
@@ -357,7 +362,61 @@ def api_stats(user):
     if user is None:
         return jsonify({"error": "Token is missing!"}), 401
 
-    return
+    try:
+        data = request.get_json()
+        if "url" in data:
+            if len(data["url"]) == 0:
+                return jsonify({"error": "URL is empty!"}), 400
+            elif len(data["url"]) > 12:
+                return jsonify({"error": "Well that's not a so short, ain't!"}), 400
+            elif len(data["url"]) < 4:
+                return jsonify({"error": "Oh, now it's too short :|"}), 400
+            else:
+                url = Url.query.filter_by(
+                    short_url=data["url"], user_id=user.id
+                ).first()
+                if url is not None:
+                    return (
+                        jsonify(
+                            {
+                                "short_url": url.short_url,
+                                "long_url": url.long_url,
+                                "creation_date": url.creation_date,
+                                "expiration_date": url.expiration_date,
+                                "is_permanent": url.is_permanent,
+                            }
+                        ),
+                        200,
+                    )
+                else:
+                    return jsonify({"error": "URL doesn't exist."})
+    except:
+        urls = db.session.query(Url).where(Url.user_id == user.id)
+        if urls.count() <= 0:
+            return jsonify({"massage": "You don't have any URLs"}), 200
+        elif urls.count() > 0:
+            json_urls = []
+            for url in urls:
+                json_url = {
+                    "short_url": url.short_url,
+                    "long_url": url.long_url,
+                    "creation_date": url.creation_date,
+                    "expiration_date": url.expiration_date,
+                    "is_permanent": url.is_permanent,
+                }
+                json_urls.append(json_url)
+
+            return jsonify(json_urls), 200
+        else:
+            return (
+                jsonify(
+                    {
+                        "error": "Error occurred.",
+                        "usage": "Run without anything to get stats for all URLs, or to get stats for particular url info Use the JSON field: url:str.",
+                    }
+                ),
+                400,
+            )
 
 
 if __name__ == "__main__":
