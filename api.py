@@ -86,6 +86,25 @@ def api_shorten(user):
                     ),
                     400,
                 )
+            elif (
+                "exp_date" not in data
+                and "is_permanent" in data
+                and data["is_permanent"].title() == "True"
+            ):
+                short_url = Shortener().shorten_url(
+                    data["url"],
+                    is_permanent=True,
+                    user_id=user.id,
+                )
+                return (
+                    jsonify(
+                        {
+                            "massage": "Shortenend URL successfully!",
+                            "url": short_url,
+                        }
+                    ),
+                    200,
+                )
             elif "exp_date" in data:
                 if Shortener().check_datetime_format(data["exp_date"]) is False:
                     return (
@@ -220,7 +239,107 @@ def api_update(user):
     if user is None:
         return jsonify({"error": "Token is missing!"}), 401
 
-    return
+    try:
+        data = request.get_json()
+        if "url" not in data:
+            return jsonify({"error": "Missing required JSON field: url:str."}), 400
+        elif len(data["url"]) == 0:
+            return jsonify({"error": "URL is empty!"}), 400
+        elif len(data["url"]) > 12:
+            return jsonify({"error": "Well that's not a so short, ain't!"}), 400
+        elif len(data["url"]) < 4:
+            return jsonify({"error": "Oh, now it's too short :|"}), 400
+
+        url = Url.query.filter_by(short_url=data["url"], user_id=user.id).first()
+        if url is None:
+            return jsonify({"error": "URL doesn't exist."})
+
+        if "is_permanent" in data and data["is_permanent"].title() not in [
+            "True",
+            "False",
+        ]:
+            return (
+                jsonify({"error": "'is_permanent' only accepts True or False."}),
+                400,
+            )
+        elif (
+            "is_permanent" in data
+            and "exp_date" not in data
+            and data["is_permanent"].title() == "False"
+        ):
+            return (
+                jsonify(
+                    {
+                        "error": "If you set is_permanent to False you have to provide an exp date."
+                    }
+                ),
+                400,
+            )
+        elif (
+            "is_permanent" in data
+            and "exp_date" in data
+            and data["is_permanent"].title() == "True"
+        ):
+            return (
+                jsonify(
+                    {"error": "You can Not set an expiration date to a permanent URL."}
+                ),
+                400,
+            )
+        elif (
+            "exp_date" not in data
+            and "is_permanent" in data
+            and data["is_permanent"].title() == "True"
+        ):
+            url.is_permanent = True
+            url.expiration_date = None
+            db.session.commit()
+            return jsonify({"massage": "Updated URL successfully!"}), 200
+        elif "exp_date" in data:
+            if Shortener().check_datetime_format(data["exp_date"]) is False:
+                return (
+                    jsonify(
+                        {
+                            "error": "'exp_date' only accepts the '%d-%m-%Y.%H:%M' format."
+                        }
+                    ),
+                    400,
+                )
+
+            current_time = datetime.datetime.now()
+            exp_date_min = datetime.datetime.strptime(
+                (current_time + datetime.timedelta(minutes=5)).strftime(
+                    "%d-%m-%Y.%H:%M"
+                ),
+                "%d-%m-%Y.%H:%M",
+            )
+            exp_date_max = datetime.datetime.strptime(
+                (current_time + datetime.timedelta(days=365 * 50)).strftime(
+                    "%d-%m-%Y.%H:%M"
+                ),
+                "%d-%m-%Y.%H:%M",
+            )
+            exp_date = datetime.datetime.strptime(
+                data["exp_date"],
+                "%d-%m-%Y.%H:%M",
+            )
+
+            if exp_date < exp_date_min or exp_date > exp_date_max:
+                return (
+                    jsonify(
+                        {
+                            "error": "Expiration date must be between 5 minutes from now to 50 years in the future"
+                        }
+                    ),
+                    400,
+                )
+            else:
+                url.is_permanent = False
+                url.expiration_date = exp_date.strftime("%d-%m-%Y.%H:%M")
+                db.session.commit()
+                return jsonify({"massage": "Updated URL successfully!"}), 200
+    except:
+        return jsonify({"error": "No JSON data provided."}), 400
 
 
 @app.route("/api/delete", methods=["DELETE"])
