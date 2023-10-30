@@ -1,0 +1,199 @@
+.container {
+    margin: auto;
+    width: 850px;
+    padding: 40px;
+    background: rgba(0, 0, 0, .5);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-top: 30px;
+    margin-bottom: 65px;
+}
+
+.container h2 {
+    margin: 0 0 30px;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.container hr {
+    margin-top: 85px;
+    margin-bottom: 35px;
+}
+
+.container hr:last-of-type {
+    visibility: hidden;
+    margin-block: 0;
+}
+
+.container .no-urls-box {
+    margin-top: 50px;
+    margin-bottom: 25px;
+    font-size: 18px;
+    text-align: center;
+    color: #fff;
+}
+
+.container .no-urls-box a {
+    color: #BB86FC;
+    letter-spacing: 1.5px;
+    transition: 0.3s ease;
+}
+
+.container .no-urls-box a:hover {
+    color: #BB86FCad;
+}
+
+.container .count-box {
+    font-size: 17px;
+    color: #fff;
+    margin-top: 65px;
+}
+
+.container .count-box span {
+    font-size: 18px;
+    font-weight: 800;
+    color: #BB86FC;
+    cursor: default;
+    transition: 0.3s ease;
+}
+
+/* 
+.container .count-box span:hover {
+    background: -webkit-radial-gradient(circle, #BB86FC 0%,#BB86FCad 50%, rgba(255, 255, 255, 1) 100%);
+    background-image: linear-gradient(to right top, #BB86FC, #BB86FCad, #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: 0.3s ease;
+} */
+
+.container .form-msg {
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.container .url-box {
+    color: #fff;
+}
+
+.container .url-box h3 {
+    margin-bottom: 15px;
+}
+
+.container .url-box .info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.container .url-box .url-inputs{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.container .url-box .url-inputs .exp_date_input {
+    position: relative;
+}
+
+.container .url-box .url-inputs .exp_date_input input {
+    width: 265px;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background: transparent;
+}
+
+.container .url-box .url-inputs .exp_date_input input:disabled {
+    color: #7a7a7a;
+}
+
+.container .url-box .url-btns {
+    display: flex;
+    flex-direction: row;
+    float: right;
+    align-items: center;
+    gap: 20px;
+}
+
+.container .url-box .url-btns .form-btn {
+    float: right;
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #BB86FC;
+    font-size: 12px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    letter-spacing: 4px;
+    border: 1px solid #BB86FC;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.container .url-box .url-btns .form-btn:hover {
+    background: #BB86FC;
+    color: #fff;
+    box-shadow: 0 0 1px #BB86FC18,
+        0 0 15px #BB86FC18,
+        0 0 20px #BB86FC18,
+        0 0 30px #BB86FC18;
+}
+
+.container .url-box .url-btns .form-btn:disabled {
+    color: #7a7a7a;
+    border: 1px solid #7a7a7a;
+    cursor: default;
+}
+
+.container .url-box .url-btns .form-btn:disabled:hover {
+    background: transparent;
+    color: #7a7a7a;
+    box-shadow: 0 0 1px transparent,
+        0 0 15px transparent,
+        0 0 20px transparent,
+        0 0 30px transparent;
+}
+
+#danger-btn {
+    color: #fc8686;
+    border: 1px solid #fc8686;
+}
+
+#danger-btn:hover {
+    background: #fc8686;
+    color: #fff;
+    box-shadow: 0 0 1px #fc868618,
+        0 0 15px #fc868618,
+        0 0 20px #fc868618,
+        0 0 30px #fc868618;
+}
+
+#text-glow {
+    color: #BB86FC;
+}
+
+.copy-urls {
+    cursor: copy;
+    transition: 0.3s ease;
+}
+
+.copy-urls:hover {
+    opacity: 80%;
+}
+
+.go-url {
+    cursor: pointer;
+}

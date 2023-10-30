@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title_left %}Dashboard | {% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+<script src="{{ url_for('static', filename='scripts/dashboard.js') }}" defer></script>
+<script src="{{ url_for('static', filename='scripts/copy.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Dashboard</h2>
+    {% if msg: %}<div class="form-msg">{{ msg | safe}}</div>{% endif %}
+
+    {% if not urls %}
+        <div class="no-urls-box">
+            You haven't shortened any URLs yet, <a href="{{ url_for('index') }}">go shorten some</a>.
+        </div>
+    {% endif %}
+
+    {% for url in urls %}
+        <div class="url-box url-{{ url.short_url }}">
+            <h3>Original URL: <span class="copy-urls" id="text-glow">{{ url.long_url }}</span></h3>
+            <div class="info">
+                <h4>Short URL: <span class="copy-urls" id="text-glow">{{ url.short_url }}</span></h4>
+                <p>Creation Date: <span id="text-glow">{{ url.creation_date }}</span></p>         
+                <p>Expiration Date:
+                    <span id="text-glow">{% if url.is_permanent == False %} {{ url.expiration_date }} {% else %} ∞ {% endif %}</span>
+                </p>
+            </div>
+
+            <form action="{{ url_for('dashboard') }}" method="post">
+                <input type="hidden" name="action" value="save_url">
+                <input type="hidden" name="value" value="{{ url.short_url }}">
+                <div class="url-inputs">
+                    <div class="exp_date_input">
+                        <input type="datetime-local" name="exp_date" min="{{ exp_date_min }}" max="{{ exp_date_max }}">
+                    </div>
+                    <div class="is_permanent_input">
+                        <label for="is_permanent">Is URL Permanent:</label>
+                        <input type="checkbox" name="is_permanent" {% if url.is_permanent == True %} checked {% endif %}>
+                    </div>
+                </div>
+            <div class="url-btns">
+                <input class="form-btn" id="save-changes-btn" type="submit" value="Save Changes" disabled>
+            </form>
+            <form action="{{ url_for('dashboard') }}" method="post">
+                <input type="hidden" name="action" value="del_url">
+                <input type="hidden" name="value" value="{{ url.short_url }}">
+                <input class="form-btn" id="danger-btn" type="submit" value="Delete URL">
+            </form>
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+    
+    {% if urls %}
+        <div class="count-box">
+            Total numbers of shortened URLs: <span>{{ urls.count() }}</span>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

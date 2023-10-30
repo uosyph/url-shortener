@@ -1,0 +1,25 @@
+.container {
+	margin: auto;
+	max-width: 50%;
+	text-align: center;
+	color: #fff;
+}
+
+.container h2 {
+	font-size: 145px;
+	font-weight: 800;
+}
+
+.container p {
+	font-size: 25px;
+	margin-bottom: 10px;
+}
+
+.container a {
+	color: #bb86fc;
+	transition: 0.3s ease;
+}
+
+.container a:hover {
+	color: #bb86fcad;
+}

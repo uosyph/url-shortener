@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title_right %} | URL Shortener{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+<script src="{{ url_for('static', filename='scripts/copy.js') }}" defer></script>
+<script src="{{ url_for('static', filename='scripts/disable.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Shorten URLs for Free</h2>
+    {% if msg: %}<div class="form-msg">{{ msg }}</div>{% endif %}
+    <form action="{{ url_for('index') }}" method="post">
+        <div class="input-box">
+            <input required type="text" name="url">
+            <label for="url">URL</label>
+        </div>
+        {% if session["loggedin"] == True: %}
+        <div class="if_logged_input">
+            <div class="input-box exp_date_input">
+                <input type="datetime-local" name="exp_date" min="{{ exp_date_min }}" max="{{ exp_date_max }}">
+            </div>
+            <div class="is_permanent_input">
+                <label for="is_permanent">Make URL permanent?</label>
+                <input type="checkbox" name="is_permanent">
+            </div>
+        </div>
+        {% endif %}
+        <input class="submit-btn" type="submit" value="Shorten">
+    </form>
+    {% if short_url %}
+        <div class="short-url-container">
+            <input id="copy-text" type="text" value="{{ short_url }}" readonly>
+            <button onclick="copyText()">Copy Short URL</button>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
