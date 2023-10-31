@@ -32,6 +32,18 @@ class Url(db.Model):
     user_id = db.Column(db.String(36))
 
 
+class Stat(db.Model):
+    __tablename__ = "stats"
+    id = db.Column(db.Integer, primary_key=True)
+    short_url = db.Column(db.String(16))
+    click_time = db.Column(db.String(19))
+    response_time = db.Column(db.String(6))
+    platform = db.Column(db.String(64))
+    browser = db.Column(db.String(64))
+    ip = db.Column(db.String(39))
+    location = db.Column(db.String(64))
+
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
