@@ -3,10 +3,28 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from jwt import encode
 from re import match
 from uuid import uuid4
+from functools import wraps
+from time import time
 import datetime
 
 from database import *
 from shortener import *
+from analyzer import *
+
+
+analyzer = Analyzer()
+
+
+def timer(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        start_time = time()
+        response = f(*args, **kwargs)
+        total_elapsed_time = time() - start_time
+        analyzer.response_time = total_elapsed_time
+        return response
+
+    return wrapper
 
 
 @app.before_request
@@ -89,9 +107,13 @@ def index():
 
 
 @app.route("/<short_url>")
+@timer
 def redirect_url(short_url):
     url = Url.query.filter_by(short_url=short_url).first()
     if url is not None:
+        analyzer.short_url = short_url
+        analyzer.user_agent = request.headers.get("User-Agent")
+        analyzer.track()
         if not match("^(http|https)://", url.long_url):
             return redirect(f"https://{url.long_url}")
         else:
