@@ -41,7 +41,12 @@ class Stat(db.Model):
     platform = db.Column(db.String(64))
     browser = db.Column(db.String(64))
     ip = db.Column(db.String(39))
-    location = db.Column(db.String(64))
+    city = db.Column(db.String(56))
+    region = db.Column(db.String(56))
+    country = db.Column(db.String(56))
+    latitude = db.Column(db.String(22))
+    longitude = db.Column(db.String(22))
+    distance = db.Column(db.String(22))
 
 
 if __name__ == "__main__":
