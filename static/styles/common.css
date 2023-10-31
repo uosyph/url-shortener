@@ -52,11 +52,14 @@ nav li a {
   transition: .3s ease;
 }
 
-nav li a img {
+nav li a svg {
   vertical-align: middle;
-  height: 1.6rem;
 }
 
 nav li a:hover {
+  color: #BB86FC;
+}
+
+#active {
   color: #BB86FC;
 }

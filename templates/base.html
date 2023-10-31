@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title_left %}{% endblock %}Shorten{% block title_right %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Lato:100,100italic,300,300italic,regular,italic,700,700italic,900,900italic">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/common.css') }}">
@@ -18,15 +19,23 @@
         </div>
         <ul>
             {% if session["loggedin"] == True: %}
-                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li>
+                    <a href="{{ url_for('dashboard') }}" {% if request.path == '/dashboard' %} id="active" {% endif %}>Dashboard</a>
+                </li>
                 <li>
                     <a href="{{ url_for('account') }}">
-                        <img src="{{ url_for('static', filename='images/user.svg') }}" alt="Account">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" height="22" width="22" {% if request.path == '/account' %} fill="#BB86FC" {% else %} fill="white" {% endif %}>
+                            <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
+                        </svg>
                     </a>
                 </li>
             {% else: %}
-                <li><a href="{{ url_for('register') }}">Sign up</a></li>
-                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li>
+                    <a href="{{ url_for('register') }}" {% if request.path == '/register' %} id="active" {% endif %}>Sign up</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('login') }}" {% if request.path == '/login' %} id="active" {% endif %}>Login</a>
+                </li>
             {% endif %}
         </ul>
     </nav>

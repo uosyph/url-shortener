@@ -83,6 +83,9 @@ class Analyzer:
         urls = db.session.query(Stat).where(Stat.short_url == self.short_url)
         return urls.count()
 
+    def analyze():
+        ...
+
     def delete(self):
         urls = db.session.query(Stat).where(Stat.short_url == self.short_url)
         for url in urls:
