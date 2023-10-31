@@ -49,6 +49,10 @@ class Analyzer:
         db.session.add(new_stat)
         db.session.commit()
 
+    def total_entries(self):
+        urls = db.session.query(Stat).where(Stat.short_url == self.short_url)
+        return urls.count()
+
     def delete(self):
         urls = db.session.query(Stat).where(Stat.short_url == self.short_url)
         for url in urls:
