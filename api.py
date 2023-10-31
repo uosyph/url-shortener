@@ -6,6 +6,10 @@ import datetime
 
 from database import *
 from shortener import *
+from analyzer import *
+
+
+analyzer = Analyzer()
 
 
 def token_required(f):
@@ -349,6 +353,8 @@ def api_delete(user):
         if url is None:
             return jsonify({"error": "URL doesn't exist."})
 
+        analyzer.short_url = url.short_url
+        analyzer.delete()
         db.session.delete(url)
         db.session.commit()
         return jsonify({"massage": "Deleted URL successfully!"}), 200

@@ -46,5 +46,11 @@ class Analyzer:
             ip=self.get_ip(),
             location="None",
         )
-        # db.session.add(new_stat)
-        # db.session.commit()
+        db.session.add(new_stat)
+        db.session.commit()
+
+    def delete(self):
+        urls = db.session.query(Stat).where(Stat.short_url == self.short_url)
+        for url in urls:
+            db.session.delete(url)
+            db.session.commit()

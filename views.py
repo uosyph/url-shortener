@@ -355,6 +355,8 @@ def dashboard():
             and request.form["value"] != ""
         ):
             url = Url.query.filter_by(short_url=request.form["value"]).first()
+            analyzer.short_url = url.short_url
+            analyzer.delete()
             db.session.delete(url)
             db.session.commit()
             msg = "URL deleted successfully!"
