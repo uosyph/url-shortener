@@ -1,4 +1,5 @@
 from flask import abort, request, session, render_template, redirect, url_for
+from sqlalchemy import desc
 from werkzeug.security import generate_password_hash, check_password_hash
 from jwt import encode
 from re import match
@@ -309,7 +310,11 @@ def dashboard():
             "%Y-%m-%dT%H:%M"
         )
 
-        urls = db.session.query(Url).where(Url.user_id == session["id"])
+        urls = (
+            db.session.query(Url)
+            .where(Url.user_id == session["id"])
+            .order_by(desc(Url.creation_date))
+        )
         if urls.count() <= 0:
             return render_template("dashboard.html")
 

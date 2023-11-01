@@ -36,7 +36,7 @@ class Stat(db.Model):
     __tablename__ = "stats"
     id = db.Column(db.Integer, primary_key=True)
     short_url = db.Column(db.String(16))
-    click_time = db.Column(db.String(19))
+    entry_time = db.Column(db.String(19))
     response_time = db.Column(db.String(6))
     platform = db.Column(db.String(64))
     browser = db.Column(db.String(64))

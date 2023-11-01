@@ -14,7 +14,7 @@ class Analyzer:
         self.response_time = ""
         self.user_details = user_agent_parser.Parse(self.user_agent)
 
-    def get_click_time(self):
+    def get_entry_time(self):
         return datetime.datetime.now().strftime("%d-%m-%Y.%H:%M:%S")
 
     def get_platform(self):
@@ -64,7 +64,7 @@ class Analyzer:
 
         new_stat = Stat(
             short_url=self.short_url,
-            click_time=self.get_click_time(),
+            entry_time=self.get_entry_time(),
             response_time=self.response_time,
             platform=self.get_platform(),
             browser=self.get_browser(),
@@ -83,7 +83,15 @@ class Analyzer:
         urls = db.session.query(Stat).where(Stat.short_url == self.short_url)
         return urls.count()
 
-    def analyze():
+    def total_unique_entries(self):
+        urls = (
+            db.session.query(Stat)
+            .where(Stat.short_url == self.short_url)
+            .group_by(Stat.ip)
+        )
+        return urls.count()
+
+    def analyze(self):
         ...
 
     def delete(self):
