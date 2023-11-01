@@ -1,4 +1,5 @@
 from flask import request
+from sqlalchemy import func, Float
 from ua_parser import user_agent_parser
 from ip2geotools.databases.noncommercial import DbIpCity
 from geopy.distance import distance
@@ -32,6 +33,30 @@ class Analyzer:
         return f"{browser}-{browser_version}"
 
     def get_ip(self):
+        import random
+
+        # Define the actions
+        actions = ["action1", "action2", "action3", "action4"]
+
+        # Assign probabilities to each action
+        probabilities = [0.25, 0.25, 0.25, 0.25]
+
+        # Choose an action based on the assigned probabilities
+        chosen_action = random.choices(actions, weights=probabilities)[0]
+
+        # Perform the chosen action
+        if chosen_action == "action1":
+            return "8.8.8.8"
+        elif chosen_action == "action2":
+            return "8.8.4.4"
+            # Do something else
+        elif chosen_action == "action3":
+            # Do another thing
+            return "1.1.1.1"
+        else:
+            # Do yet another thing
+            return "204.106.240.53"
+
         if request.environ.get("HTTP_X_FORWARDED_FOR") is None:
             return request.environ["REMOTE_ADDR"]
         else:
@@ -92,7 +117,65 @@ class Analyzer:
         return urls.count()
 
     def analyze(self):
-        ...
+        average_response_time = db.session.query(
+            func.avg(func.cast(Stat.response_time, Float))
+        ).scalar()
+
+        top_platforms = (
+            db.session.query(Stat.platform, func.count(Stat.platform))
+            .group_by(Stat.platform)
+            .order_by(func.count(Stat.platform).desc())
+            .limit(3)
+            .all()
+        )
+
+        top_browsers = (
+            db.session.query(Stat.browser, func.count(Stat.browser))
+            .group_by(Stat.browser)
+            .order_by(func.count(Stat.browser).desc())
+            .limit(3)
+            .all()
+        )
+
+        top_countries = (
+            db.session.query(Stat.country, func.count(Stat.country))
+            .group_by(Stat.country)
+            .order_by(func.count(Stat.country).desc())
+            .limit(10)
+            .all()
+        )
+
+        top_regions = (
+            db.session.query(Stat.region, func.count(Stat.region))
+            .group_by(Stat.region)
+            .order_by(func.count(Stat.region).desc())
+            .limit(10)
+            .all()
+        )
+
+        top_cities = (
+            db.session.query(Stat.city, func.count(Stat.city))
+            .group_by(Stat.city)
+            .order_by(func.count(Stat.city).desc())
+            .limit(10)
+            .all()
+        )
+        average_distance = db.session.query(
+            func.avg(func.cast(Stat.distance, Float))
+        ).scalar()
+
+        return {
+            "most_frequent_entry_time_of_day": most_frequent_entry_time_of_day,
+            "most_frequent_entry_time_of_month": most_frequent_entry_time_of_month,
+            "most_frequent_entry_time_of_year": most_frequent_entry_time_of_year,
+            "average_response_time": average_response_time,
+            "top_platform": top_platforms,
+            "top_browser": top_browsers,
+            "top_countries": top_countries,
+            "top_regions": top_regions,
+            "top_cities": top_cities,
+            "average_distance": average_distance,
+        }
 
     def delete(self):
         urls = db.session.query(Stat).where(Stat.short_url == self.short_url)
