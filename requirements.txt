@@ -1,0 +1,6 @@
+Flask
+Flask-SQLAlchemy
+PyJWT
+ua_parser
+ip2geotools
+geopy
