@@ -26,7 +26,7 @@ class Url(db.Model):
     __tablename__ = "urls"
     short_url = db.Column(db.String(16), primary_key=True)
     long_url = db.Column(db.String(2048))
-    creation_date = db.Column(db.String(16))
+    creation_date = db.Column(db.String(19))
     expiration_date = db.Column(db.String(16))
     is_permanent = db.Column(db.Boolean)
     user_id = db.Column(db.String(36))
