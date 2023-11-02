@@ -56,7 +56,7 @@ class Shortener:
 
         # Otherwise, generate a new short URL and store the mapping in the database.
         short_url = self.generate_short_url()
-        creation_date = datetime.datetime.now().strftime("%d-%m-%Y.%H:%M")
+        creation_date = datetime.datetime.now().strftime("%d-%m-%Y.%H:%M:%S")
         if expiration_date is None and is_permanent == False:
             expiration_date = (
                 datetime.datetime.now() + datetime.timedelta(days=7)
