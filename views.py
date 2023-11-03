@@ -6,6 +6,8 @@ from re import match
 from uuid import uuid4
 from functools import wraps
 from pycountry import countries
+from humanize.time import precisedelta
+from calendar import month_name
 from time import time
 import datetime
 
@@ -381,6 +383,9 @@ def dashboard():
             urls=urls,
             analyzer=analyzer,
             countries=countries,
+            datetime=datetime,
+            precisedelta=precisedelta,
+            month_name=month_name,
             exp_date_min=exp_date_min,
             exp_date_max=exp_date_max,
         )
