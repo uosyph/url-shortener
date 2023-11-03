@@ -382,6 +382,8 @@ def api_stats(user):
                     short_url=data["url"], user_id=user.id
                 ).first()
                 if url is not None:
+                    analyzer.short_url = url.short_url
+                    stats = analyzer.analyze()
                     return (
                         jsonify(
                             {
@@ -390,6 +392,22 @@ def api_stats(user):
                                 "creation_date": url.creation_date,
                                 "expiration_date": url.expiration_date,
                                 "is_permanent": url.is_permanent,
+                                "most_frequent_entry_time_of_day": stats[
+                                    "most_frequent_entry_time_of_day"
+                                ],
+                                "most_frequent_entry_time_of_month": stats[
+                                    "most_frequent_entry_time_of_month"
+                                ],
+                                "most_frequent_entry_time_of_year": stats[
+                                    "most_frequent_entry_time_of_year"
+                                ],
+                                "average_response_time": stats["average_response_time"],
+                                "top_platforms": stats["top_platforms"],
+                                "top_browsers": stats["top_browsers"],
+                                "top_countries": stats["top_countries"],
+                                "top_regions": stats["top_regions"],
+                                "top_cities": stats["top_cities"],
+                                "average_distance": stats["average_distance"],
                             }
                         ),
                         200,
@@ -403,12 +421,30 @@ def api_stats(user):
         elif urls.count() > 0:
             json_urls = []
             for url in urls:
+                analyzer.short_url = url.short_url
+                stats = analyzer.analyze()
                 json_url = {
                     "short_url": url.short_url,
                     "long_url": url.long_url,
                     "creation_date": url.creation_date,
                     "expiration_date": url.expiration_date,
                     "is_permanent": url.is_permanent,
+                    "most_frequent_entry_time_of_day": stats[
+                        "most_frequent_entry_time_of_day"
+                    ],
+                    "most_frequent_entry_time_of_month": stats[
+                        "most_frequent_entry_time_of_month"
+                    ],
+                    "most_frequent_entry_time_of_year": stats[
+                        "most_frequent_entry_time_of_year"
+                    ],
+                    "average_response_time": stats["average_response_time"],
+                    "top_platforms": stats["top_platforms"],
+                    "top_browsers": stats["top_browsers"],
+                    "top_countries": stats["top_countries"],
+                    "top_regions": stats["top_regions"],
+                    "top_cities": stats["top_cities"],
+                    "average_distance": stats["average_distance"],
                 }
                 json_urls.append(json_url)
 

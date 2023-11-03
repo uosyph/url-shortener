@@ -133,6 +133,7 @@ class Analyzer:
             .limit(3)
             .all()
         )
+        top_platforms = [{"platform": row[0], "count": row[1]} for row in top_platforms]
 
         top_browsers = (
             db.session.query(Stat.browser, func.count(Stat.browser))
@@ -142,6 +143,7 @@ class Analyzer:
             .limit(3)
             .all()
         )
+        top_browsers = [{"browser": row[0], "count": row[1]} for row in top_browsers]
 
         top_countries = (
             db.session.query(Stat.country, func.count(Stat.country))
@@ -151,6 +153,7 @@ class Analyzer:
             .limit(10)
             .all()
         )
+        top_countries = [{"country": row[0], "count": row[1]} for row in top_countries]
 
         top_regions = (
             db.session.query(Stat.region, func.count(Stat.region))
@@ -160,6 +163,7 @@ class Analyzer:
             .limit(10)
             .all()
         )
+        top_regions = [{"region": row[0], "count": row[1]} for row in top_regions]
 
         top_cities = (
             db.session.query(Stat.city, func.count(Stat.city))
@@ -169,6 +173,7 @@ class Analyzer:
             .limit(10)
             .all()
         )
+        top_cities = [{"city": row[0], "count": row[1]} for row in top_cities]
 
         average_distance = (
             db.session.query(func.avg(func.cast(Stat.distance, Float)))
@@ -181,8 +186,8 @@ class Analyzer:
             "most_frequent_entry_time_of_month": most_frequent_entry_time_of_month,
             "most_frequent_entry_time_of_year": most_frequent_entry_time_of_year,
             "average_response_time": average_response_time,
-            "top_platform": top_platforms,
-            "top_browser": top_browsers,
+            "top_platforms": top_platforms,
+            "top_browsers": top_browsers,
             "top_countries": top_countries,
             "top_regions": top_regions,
             "top_cities": top_cities,
