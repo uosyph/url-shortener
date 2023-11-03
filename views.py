@@ -324,13 +324,17 @@ def dashboard():
             and request.form["value"] != ""
         ):
             if "is_permanent" in request.form:
-                url = Url.query.filter_by(short_url=request.form["value"]).first()
+                url = Url.query.filter_by(
+                    short_url=request.form["value"], user_id=session["id"]
+                ).first()
                 url.is_permanent = True
                 url.expiration_date = None
                 db.session.commit()
                 msg = f'URL <span class="go-url" id="text-glow">{request.form["value"]}</span> is not permanent <span id="text-glow">∞ ✨</span>'
             elif "exp_date" in request.form and request.form["exp_date"] != "":
-                url = Url.query.filter_by(short_url=request.form["value"]).first()
+                url = Url.query.filter_by(
+                    short_url=request.form["value"], user_id=session["id"]
+                ).first()
                 exp_date = datetime.datetime.strptime(
                     Shortener().convert_datetime_format(request.form["exp_date"]),
                     "%d-%m-%Y.%H:%M",
@@ -359,7 +363,9 @@ def dashboard():
             and request.form["action"] == "del_url"
             and request.form["value"] != ""
         ):
-            url = Url.query.filter_by(short_url=request.form["value"]).first()
+            url = Url.query.filter_by(
+                short_url=request.form["value"], user_id=session["id"]
+            ).first()
             analyzer.short_url = url.short_url
             analyzer.delete()
             db.session.delete(url)
