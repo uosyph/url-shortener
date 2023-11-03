@@ -20,6 +20,7 @@
     {% endif %}
 
     {% for url in urls %}
+        {% set stats = analyzer.analyze(url.short_url) %}
         <div class="url-box url-{{ url.short_url }}">
             <h3>Original URL: <span class="copy-urls" id="text-glow">{{ url.long_url }}</span></h3>
             <div class="info">
@@ -28,6 +29,63 @@
                 <p>Expiration Date:
                     <span id="text-glow">{% if url.is_permanent == False %} {{ url.expiration_date }} {% else %} ∞ {% endif %}</span>
                 </p>
+
+                <p>Most common day to visit the URL:
+                    {% for day_time in stats["most_frequent_entry_time_of_day"] %}
+                        <span id="text-glow">{{ day_time }}</span>
+                    {% endfor %}
+                </p>
+
+                <p>Most common month to visit the URL:
+                    {% for month_time in stats["most_frequent_entry_time_of_month"] %}
+                        <span id="text-glow">{{ month_time }}</span>
+                    {% endfor %}
+                </p>
+
+                <p>Most common year to visit the URL:
+                    {% for year_time in stats["most_frequent_entry_time_of_year"] %}
+                        <span id="text-glow">{{ year_time }}</span>
+                    {% endfor %}
+                </p>
+
+                <p>Average response time: <span id="text-glow">{{ stats["average_response_time"] }} Seconds</span></p>
+
+                <p>Average distance client from server: <span id="text-glow">{{ stats["average_distance"] }} KM</span></p>
+
+                <ul>
+                    <p>Top platforms:</p>
+                    {% for platform in stats["top_platforms"] %}
+                        <li><span id="text-glow">{{ platform['platform'] }}: {{ platform['count'] }}</span></li>
+                    {% endfor %}
+                </ul>
+
+                <ul>
+                    <p>Top browsers:</p>
+                    {% for browser in stats["top_browsers"] %}
+                        <li><span id="text-glow">{{ browser['browser'] }}: {{ browser['count'] }}</span></li>
+                    {% endfor %}
+                </ul>
+                
+                <ul>
+                    <p>Top countries:</p>
+                    {% for country in stats["top_countries"] %}
+                        <li><span id="text-glow">{{ country['country'] }}: {{ country['count'] }}</span></li>
+                    {% endfor %}
+                </ul>
+                
+                <ul>
+                    <p>Top regions:</p>
+                    {% for region in stats["top_regions"] %}
+                        <li><span id="text-glow">{{ region['region'] }}: {{ region['count'] }}</span></li>
+                    {% endfor %}
+                </ul>
+
+                <ul>
+                    <p>Top cities:</p>
+                    {% for city in stats["top_cities"] %}
+                        <li><span id="text-glow">{{ city['city'] }}: {{ city['count'] }}</span></li>
+                    {% endfor %}
+                </ul>
             </div>
 
             <form action="{{ url_for('dashboard') }}" method="post">

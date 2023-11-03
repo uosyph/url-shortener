@@ -378,6 +378,7 @@ def dashboard():
             "dashboard.html",
             msg=msg,
             urls=urls,
+            analyzer=analyzer,
             exp_date_min=exp_date_min,
             exp_date_max=exp_date_max,
         )

@@ -113,7 +113,9 @@ class Analyzer:
             months_list.append(month)
         return multimode(hours_list), multimode(days_list), multimode(months_list)
 
-    def analyze(self):
+    def analyze(self, short_url=None):
+        if short_url is not None:
+            self.short_url = short_url
         times = self.most_frequent_times()
         most_frequent_entry_time_of_day = times[0]
         most_frequent_entry_time_of_month = times[1]

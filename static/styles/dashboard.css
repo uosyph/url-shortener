@@ -88,6 +88,11 @@
     align-items: center;
     gap: 20px;
     margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.container .url-box .info li {
+    list-style: none;
 }
 
 .container .url-box .url-inputs{
