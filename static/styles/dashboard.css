@@ -186,6 +186,11 @@
         0 0 30px #fc868618;
 }
 
+#break {
+    flex-basis: 100%;
+    height: 0;
+}
+
 #text-glow {
     color: #BB86FC;
 }

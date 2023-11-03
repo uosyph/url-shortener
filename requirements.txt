@@ -4,3 +4,4 @@ PyJWT
 ua_parser
 ip2geotools
 geopy
+pycountry

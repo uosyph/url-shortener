@@ -5,6 +5,7 @@ from jwt import encode
 from re import match
 from uuid import uuid4
 from functools import wraps
+from pycountry import countries
 from time import time
 import datetime
 
@@ -379,6 +380,7 @@ def dashboard():
             msg=msg,
             urls=urls,
             analyzer=analyzer,
+            countries=countries,
             exp_date_min=exp_date_min,
             exp_date_max=exp_date_max,
         )

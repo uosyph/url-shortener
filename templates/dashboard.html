@@ -48,10 +48,12 @@
                     {% endfor %}
                 </p>
 
-                <p>Average response time: <span id="text-glow">{{ stats["average_response_time"] }} Seconds</span></p>
+                <p>Average response time: <span id="text-glow">{{ stats["average_response_time"]|round(5) }} Seconds</span></p>
 
-                <p>Average distance client from server: <span id="text-glow">{{ stats["average_distance"] }} KM</span></p>
-
+                <p>Average client distance from server: <span id="text-glow">{{ stats["average_distance"]|round(2) }} KM</span></p>
+                
+                <div id="break"></div>
+                
                 <ul>
                     <p>Top platforms:</p>
                     {% for platform in stats["top_platforms"] %}
@@ -65,11 +67,17 @@
                         <li><span id="text-glow">{{ browser['browser'] }}: {{ browser['count'] }}</span></li>
                     {% endfor %}
                 </ul>
+
+                <div id="break"></div>
                 
                 <ul>
                     <p>Top countries:</p>
                     {% for country in stats["top_countries"] %}
-                        <li><span id="text-glow">{{ country['country'] }}: {{ country['count'] }}</span></li>
+                        <li>
+                            <span id="text-glow">
+                                {{ countries.get(alpha_2=country['country']).name }}: {{ country['count'] }}
+                            </span>
+                        </li>
                     {% endfor %}
                 </ul>
                 
