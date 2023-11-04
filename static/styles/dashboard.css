@@ -91,6 +91,30 @@
     flex-wrap: wrap;
 }
 
+.container .url-box .info .exp-date-humanized {
+    position: relative;
+    display: inline-block;
+}
+
+.container .url-box .info .exp-date-humanized .exp-date-formatted {
+    visibility: hidden;
+    width: 120px;
+    background-color: #1b1b1b;
+    color: #BB86FC;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.container .url-box .info .exp-date-humanized:hover .exp-date-formatted {
+    visibility: visible;
+}
+
 .container .url-box .info li {
     list-style: none;
 }
