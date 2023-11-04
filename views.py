@@ -38,6 +38,22 @@ def clear_trailing():
         return redirect(rp[:-1])
 
 
+@app.route("/<short_url>")
+@timer
+def redirect_url(short_url):
+    url = Url.query.filter_by(short_url=short_url).first()
+    if url is not None:
+        analyzer.short_url = short_url
+        analyzer.user_agent = request.headers.get("User-Agent")
+        analyzer.track()
+        if not match("^(http|https)://", url.long_url):
+            return redirect(f"https://{url.long_url}")
+        else:
+            return redirect(url.long_url)
+    else:
+        abort(404)
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     msg = ""
@@ -110,20 +126,25 @@ def index():
     )
 
 
-@app.route("/<short_url>")
-@timer
-def redirect_url(short_url):
-    url = Url.query.filter_by(short_url=short_url).first()
-    if url is not None:
-        analyzer.short_url = short_url
-        analyzer.user_agent = request.headers.get("User-Agent")
-        analyzer.track()
-        if not match("^(http|https)://", url.long_url):
-            return redirect(f"https://{url.long_url}")
+@app.route("/unshorten", methods=["GET", "POST"])
+def unshorten():
+    msg = ""
+    long_url = None
+
+    if request.method == "POST" and "url" in request.form:
+        url = Url.query.filter_by(short_url=request.form["url"]).first()
+        if url is not None:
+            long_url = url.long_url
         else:
-            return redirect(url.long_url)
-    else:
-        abort(404)
+            msg = "URL doesn't exist!"
+    elif request.method == "POST":
+        msg = "Please fill out the form!"
+
+    return render_template(
+        "unshorten.html",
+        msg=msg,
+        long_url=long_url,
+    )
 
 
 @app.route("/register", methods=["GET", "POST"])
