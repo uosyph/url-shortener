@@ -132,7 +132,8 @@ def unshorten():
     long_url = None
 
     if request.method == "POST" and "url" in request.form:
-        url = Url.query.filter_by(short_url=request.form["url"]).first()
+        short_url = request.form["url"].split("/")[-1]
+        url = Url.query.filter_by(short_url=short_url).first()
         if url is not None:
             long_url = url.long_url
         else:
