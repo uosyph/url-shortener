@@ -107,6 +107,18 @@
                         <li><span id="text-glow">{{ city['city'] }}: {{ city['count'] }}</span></li>
                     {% endfor %}
                 </ul>
+
+                <p>Entires:
+                    <span id="text-glow">{{ stats["entries"] }}</span>
+                </p>
+
+                <p>Total entires:
+                    <span id="text-glow">{{ stats["total_entries_count"] }}</span>
+                </p>
+
+                <p>Total unique entires:
+                    <span id="text-glow">{{ stats["total_unique_entries_count"] }}</span>
+                </p>
             </div>
 
             <form action="{{ url_for('dashboard') }}" method="post">

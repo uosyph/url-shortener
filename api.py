@@ -392,6 +392,11 @@ def api_stats(user):
                                 "creation_date": url.creation_date,
                                 "expiration_date": url.expiration_date,
                                 "is_permanent": url.is_permanent,
+                                "entries": stats["entries"],
+                                "total_entries_count": stats["total_entries_count"],
+                                "total_unique_entries_count": stats[
+                                    "total_unique_entries_count"
+                                ],
                                 "most_frequent_entry_time_of_day": stats[
                                     "most_frequent_entry_time_of_day"
                                 ],
@@ -429,6 +434,9 @@ def api_stats(user):
                     "creation_date": url.creation_date,
                     "expiration_date": url.expiration_date,
                     "is_permanent": url.is_permanent,
+                    "entries": stats["entries"],
+                    "total_entries_count": stats["total_entries_count"],
+                    "total_unique_entries_count": stats["total_unique_entries_count"],
                     "most_frequent_entry_time_of_day": stats[
                         "most_frequent_entry_time_of_day"
                     ],
