@@ -1,129 +1,127 @@
 .container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 850px;
-    padding: 40px;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, .5);
-    box-sizing: border-box;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
-    border-radius: 10px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 850px;
+	padding: 40px;
+	transform: translate(-50%, -50%);
+	background: rgba(0, 0, 0, 0.5);
+	box-sizing: border-box;
+	box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
+	border-radius: 10px;
 }
 
 .container h2 {
-    margin: 0 0 30px;
-    padding: 0;
-    color: #fff;
-    text-align: center;
-    text-transform: uppercase;
+	margin: 0 0 30px;
+	padding: 0;
+	color: #fff;
+	text-align: center;
+	text-transform: uppercase;
 }
 
 .container .input-box {
-    position: relative;
+	position: relative;
 }
 
 .container .input-box input {
-    width: 100%;
-    padding: 10px 0;
-    font-size: 16px;
-    color: #fff;
-    margin-bottom: 30px;
-    border: none;
-    border-bottom: 1px solid #fff;
-    outline: none;
-    background: transparent;
+	width: 100%;
+	padding: 10px 0;
+	font-size: 16px;
+	color: #fff;
+	margin-bottom: 30px;
+	border: none;
+	border-bottom: 1px solid #fff;
+	outline: none;
+	background: transparent;
 }
 
 .container .input-box label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 10px 0;
-    font-size: 16px;
-    color: #fff;
-    pointer-events: none;
-    transition: .5s;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 10px 0;
+	font-size: 16px;
+	color: #fff;
+	pointer-events: none;
+	transition: 0.5s;
 }
 
 .container .input-box input:focus ~ label,
 .container .input-box input:valid ~ label {
-    top: -20px;
-    left: 0;
-    color: #BB86FC;
-    font-size: 12px;
+	top: -20px;
+	left: 0;
+	color: #bb86fc;
+	font-size: 12px;
 }
 
 .container form .if_logged_input {
-    display: flex;
-    flex-direction: row;
-    float: left;
-    align-items: center;
-    gap: 20px;
+	display: flex;
+	flex-direction: row;
+	float: left;
+	align-items: center;
+	gap: 20px;
 }
 
 .container form .exp_date_input input {
-    width: 265px;
-    margin-bottom: 0 !important;
+	width: 265px;
+	margin-bottom: 0 !important;
 }
 
 .container form .exp_date_input input:disabled {
-    color: #7a7a7a;
+	color: #7a7a7a;
 }
 
 .container form .is_permanent_input {
-    color: #fff;
+	color: #fff;
 }
 
 .container form .is_permanent_input label {
-    margin-right: 10px;
+	margin-right: 10px;
 }
 
 .container form .is_permanent_input input {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .container form .submit-btn {
-    float: right;
-    position: relative;
-    display: inline-block;
-    padding: 10px 20px;
-    color: #BB86FC;
-    font-size: 16px;
-    text-decoration: none;
-    text-transform: uppercase;
-    overflow: hidden;
-    transition: .5s;
-    margin-bottom: 5px;
-    letter-spacing: 4px;
-    border: 1px solid #BB86FC;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: transparent;
+	float: right;
+	position: relative;
+	display: inline-block;
+	padding: 10px 20px;
+	color: #bb86fc;
+	font-size: 16px;
+	text-decoration: none;
+	text-transform: uppercase;
+	overflow: hidden;
+	transition: 0.5s;
+	margin-bottom: 5px;
+	letter-spacing: 4px;
+	border: 1px solid #bb86fc;
+	border-radius: 5px;
+	cursor: pointer;
+	background-color: transparent;
 }
 
 .container form .submit-btn:hover {
-    background: #BB86FC;
-    color: #fff;
-    box-shadow: 0 0 1px #BB86FC18,
-        0 0 15px #BB86FC18,
-        0 0 20px #BB86FC18,
-        0 0 30px #BB86FC18;
+	background: #bb86fc;
+	color: #fff;
+	box-shadow: 0 0 1px #bb86fc18, 0 0 15px #bb86fc18, 0 0 20px #bb86fc18,
+		0 0 30px #bb86fc18;
 }
 
 .container .form-msg {
-    color: #fff;
-    margin-bottom: 20px;
+	color: #fff;
+	margin-bottom: 20px;
 }
 
 .container .short-url-container input {
-    width: 100%;
-    padding: 10px 0;
-    font-size: 16px;
-    color: #fff;
-    margin-top: 20px;
-    border: none;
-    border-bottom: 1px solid #fff;
-    outline: none;
-    background: transparent;
+	width: 100%;
+	padding: 10px 0;
+	font-size: 16px;
+	color: #fff;
+	margin-top: 20px;
+	border: none;
+	border-bottom: 1px solid #fff;
+	outline: none;
+	background: transparent;
 }
