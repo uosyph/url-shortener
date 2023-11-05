@@ -60,6 +60,7 @@
 	float: left;
 	align-items: center;
 	gap: 20px;
+	margin-bottom: 20px;
 }
 
 .container form .exp_date_input input {
@@ -115,13 +116,30 @@
 }
 
 .container .short-url-container input {
-	width: 100%;
+	display: inline-block;
+	width: 77%;
 	padding: 10px 0;
 	font-size: 16px;
 	color: #fff;
-	margin-top: 20px;
 	border: none;
 	border-bottom: 1px solid #fff;
 	outline: none;
 	background: transparent;
+}
+
+.container .short-url-container button {
+	display: inline-block;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	transition: 0.3s ease;
+}
+
+.container .short-url-container button:hover {
+	opacity: 80%;
+}
+
+.container .short-url-container button svg {
+	margin-left: -32px;
+	vertical-align: middle;
 }

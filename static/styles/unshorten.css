@@ -89,7 +89,8 @@
 	margin-bottom: 20px;
 }
 
-.container .short-url-container input {
+.container .long-url-container input {
+	display: inline-block;
 	width: 100%;
 	padding: 10px 0;
 	font-size: 16px;
@@ -99,4 +100,21 @@
 	border-bottom: 1px solid #fff;
 	outline: none;
 	background: transparent;
+}
+
+.container .long-url-container button {
+	display: inline-block;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	transition: 0.3s ease;
+}
+
+.container .long-url-container button:hover {
+	opacity: 80%;
+}
+
+.container .long-url-container button svg {
+	margin-left: -32px;
+	vertical-align: middle;
 }
