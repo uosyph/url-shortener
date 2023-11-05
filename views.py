@@ -245,6 +245,7 @@ def logout():
 def account():
     if "loggedin" in session and session["loggedin"]:
         msg = ""
+        tab = "profile"
         user_token = User.query.filter_by(id=session["id"]).first().token
 
         if (
@@ -268,6 +269,7 @@ def account():
                     msg = "Same username you have!"
                 else:
                     msg = "Username is not available!"
+            tab = "profile"
         elif (
             request.method == "POST"
             and "old-password" in request.form
@@ -295,6 +297,7 @@ def account():
                     msg = "Updated password successfully!"
             else:
                 msg = "Password is wrong!"
+            tab = "security"
         elif request.method == "POST" and request.form["action"] == "gen_token":
             user = User.query.filter_by(id=session["id"]).first()
             token = encode(
@@ -303,12 +306,22 @@ def account():
             )
             user.token = token
             db.session.commit()
+            user_token = token
             msg = "Generated token successfully!"
+            tab = "authn"
+            return render_template(
+                "account.html", msg=msg, tab=tab, user_token=user_token
+            )
         elif request.method == "POST" and request.form["action"] == "del_token":
             user = User.query.filter_by(id=session["id"]).first()
             user.token = None
             db.session.commit()
+            user_token = None
             msg = "Deleted token successfully!"
+            tab = "authn"
+            return render_template(
+                "account.html", msg=msg, tab=tab, user_token=user_token
+            )
         elif request.method == "POST" and request.form["action"] == "delete":
             user = User.query.filter_by(id=session["id"]).first()
             db.session.delete(user)
@@ -318,7 +331,7 @@ def account():
         elif request.method == "POST":
             msg = "Please fill out the form!"
 
-        return render_template("account.html", msg=msg, user_token=user_token)
+        return render_template("account.html", msg=msg, tab=tab, user_token=user_token)
     else:
         abort(401)
 

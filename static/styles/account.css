@@ -204,7 +204,8 @@
 }
 
 .container .token-container input {
-	width: 100%;
+	display: inline-block;
+	width: 92%;
 	padding: 10px 0;
 	font-size: 16px;
 	color: #fff;
@@ -212,4 +213,20 @@
 	border-bottom: 1px solid #fff;
 	outline: none;
 	background: transparent;
+}
+
+.container .token-container button {
+	display: inline-block;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	transition: 0.3s ease;
+}
+
+.container .token-container button:hover {
+	opacity: 80%;
+}
+
+.container .token-container button svg {
+	vertical-align: middle;
 }
