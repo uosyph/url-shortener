@@ -1,15 +1,18 @@
-.form-box {
-	margin: auto;
-	width: 400px;
+.container {
+	display: inline-block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 850px;
 	padding: 40px;
+	transform: translate(-50%, -50%);
 	background: rgba(0, 0, 0, 0.5);
 	box-sizing: border-box;
 	box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
 	border-radius: 10px;
-	margin-bottom: 65px;
 }
 
-.form-box h2 {
+.container h2 {
 	margin: 0 0 30px;
 	padding: 0;
 	color: #fff;
@@ -17,11 +20,13 @@
 	text-transform: uppercase;
 }
 
-.form-box .input-box {
+.container .input-box {
+	float: left;
+	width: 75%;
 	position: relative;
 }
 
-.form-box .input-box input {
+.container .input-box input {
 	width: 100%;
 	padding: 10px 0;
 	font-size: 16px;
@@ -33,7 +38,7 @@
 	background: transparent;
 }
 
-.form-box .input-box label {
+.container .input-box label {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -44,15 +49,17 @@
 	transition: 0.5s;
 }
 
-.form-box .input-box input:focus ~ label,
-.form-box .input-box input:valid ~ label {
+.container .input-box input:focus ~ label,
+.container .input-box input:valid ~ label {
 	top: -20px;
 	left: 0;
 	color: #bb86fc;
 	font-size: 12px;
 }
 
-.form-box form .submit-btn {
+.container form .submit-btn {
+	float: right;
+	width: 20%;
 	position: relative;
 	display: inline-block;
 	padding: 10px 20px;
@@ -62,7 +69,6 @@
 	text-transform: uppercase;
 	overflow: hidden;
 	transition: 0.5s;
-	margin-top: 20px;
 	margin-bottom: 5px;
 	letter-spacing: 4px;
 	border: 1px solid #bb86fc;
@@ -71,28 +77,26 @@
 	background-color: transparent;
 }
 
-.form-box form .submit-btn:hover {
+.container form .submit-btn:hover {
 	background: #bb86fc;
 	color: #fff;
 	box-shadow: 0 0 1px #bb86fc18, 0 0 15px #bb86fc18, 0 0 20px #bb86fc18,
 		0 0 30px #bb86fc18;
 }
 
-.form-box .redirect-box {
-	color: #fff;
-	margin-top: 25px;
-}
-
-.form-box .redirect-box a {
-	color: #bb86fc;
-	transition: 0.3s ease;
-}
-
-.form-box .redirect-box a:hover {
-	color: #bb86fcad;
-}
-
-.form-box .form-msg {
+.container .form-msg {
 	color: #fff;
 	margin-bottom: 20px;
+}
+
+.container .short-url-container input {
+	width: 100%;
+	padding: 10px 0;
+	font-size: 16px;
+	color: #fff;
+	margin-top: 20px;
+	border: none;
+	border-bottom: 1px solid #fff;
+	outline: none;
+	background: transparent;
 }

@@ -18,6 +18,9 @@
             </a>
         </div>
         <ul>
+            <li>
+                <a href="{{ url_for('unshorten') }}" {% if request.path == '/unshorten' %} id="active" {% endif %}>Unshorten</a>
+            </li>
             {% if session["loggedin"] == True: %}
                 <li>
                     <a href="{{ url_for('dashboard') }}" {% if request.path == '/dashboard' %} id="active" {% endif %}>Dashboard</a>

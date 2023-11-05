@@ -32,7 +32,7 @@
     </form>
     {% if short_url %}
         <div class="short-url-container">
-            <input id="copy-text" type="text" value="{{ short_url }}" readonly>
+            <input id="copy-text" type="text" value="{{ request.host }}/{{ short_url }}" readonly>
             <button onclick="copyText()">Copy Short URL</button>
         </div>
     {% endif %}

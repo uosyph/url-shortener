@@ -20,14 +20,106 @@
     {% endif %}
 
     {% for url in urls %}
+        {% set stats = analyzer.analyze(url.short_url) %}
         <div class="url-box url-{{ url.short_url }}">
             <h3>Original URL: <span class="copy-urls" id="text-glow">{{ url.long_url }}</span></h3>
             <div class="info">
-                <h4>Short URL: <span class="copy-urls" id="text-glow">{{ url.short_url }}</span></h4>
-                <p>Creation Date: <span id="text-glow">{{ url.creation_date }}</span></p>         
-                <p>Expiration Date:
-                    <span id="text-glow">{% if url.is_permanent == False %} {{ url.expiration_date }} {% else %} ∞ {% endif %}</span>
+                <h4>Short URL: <span class="copy-urls" id="text-glow">{{ request.host }}/{{ url.short_url }}</span></h4>
+
+                <div id="break"></div>
+
+                <p>Creation Date:
+                    {% set creation_date = datetime.datetime.strptime(url.creation_date, "%d-%m-%Y.%H:%M:%S") %}
+                    <span id="text-glow">{{ creation_date.strftime("%A, %B %d, %Y at %H:%M:%S") }}</span>
                 </p>
+                <p>Expiration Date:
+                    {% if url.is_permanent == False %}
+                        {% set expiration_date = datetime.datetime.strptime(url.expiration_date, "%d-%m-%Y.%H:%M") %}
+                        <span id="text-glow" class="exp-date-humanized">
+                            In {{ precisedelta(expiration_date, suppress=['seconds'], format="%0.0f") }}
+                            <span class="exp-date-formatted">{{ expiration_date.strftime("%A, %B %d, %Y at %H:%M") }}</span>
+                        </span>
+                    {% else %}
+                        <span id="text-glow">∞</span>
+                    {% endif %}
+                </p>
+
+                {% if stats["total_entries_count"] != 0 %}
+                    <div id="break"></div>
+
+                    <p>Most common hour to visit the URL:
+                        {% for hour in stats["most_frequent_entry_time_of_day"] %}
+                            <span id="text-glow">{{ datetime.datetime.strptime(hour, "%H").strftime("%-I %p") }}</span>
+                        {% endfor %}
+                    </p>
+
+                    <p>Most common day to visit the URL:
+                        {% for day in stats["most_frequent_entry_time_of_month"] %}
+                            <span id="text-glow">{{ datetime.datetime.strptime(day, "%d").strftime("%-d") }}</span>
+                        {% endfor %}
+                    </p>
+
+                    <p>Most common month to visit the URL:
+                        {% for month in stats["most_frequent_entry_time_of_year"] %}
+                            <span id="text-glow">{{ month_name[month | int] }}</span>
+                        {% endfor %}
+                    </p>
+
+                    <p>Average response time: <span id="text-glow">{{ stats["average_response_time"]|round(5) }} Seconds</span></p>
+
+                    <p>Average client distance from server: <span id="text-glow">{{ stats["average_distance"]|round(2) }} KM</span></p>
+                    
+                    <div id="break"></div>
+                    
+                    <ul>
+                        <p>Top platforms:</p>
+                        {% for platform in stats["top_platforms"] %}
+                            <li><span id="text-glow">{{ platform['platform'] }}: {{ platform['count'] }}</span></li>
+                        {% endfor %}
+                    </ul>
+
+                    <ul>
+                        <p>Top browsers:</p>
+                        {% for browser in stats["top_browsers"] %}
+                            <li><span id="text-glow">{{ browser['browser'] }}: {{ browser['count'] }}</span></li>
+                        {% endfor %}
+                    </ul>
+
+                    <div id="break"></div>
+                    
+                    <ul>
+                        <p>Top countries:</p>
+                        {% for country in stats["top_countries"] %}
+                            <li>
+                                <span id="text-glow">
+                                    {{ countries.get(alpha_2=country['country']).name }}: {{ country['count'] }}
+                                </span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <ul>
+                        <p>Top regions:</p>
+                        {% for region in stats["top_regions"] %}
+                            <li><span id="text-glow">{{ region['region'] }}: {{ region['count'] }}</span></li>
+                        {% endfor %}
+                    </ul>
+
+                    <ul>
+                        <p>Top cities:</p>
+                        {% for city in stats["top_cities"] %}
+                            <li><span id="text-glow">{{ city['city'] }}: {{ city['count'] }}</span></li>
+                        {% endfor %}
+                    </ul>
+
+                    <p>Total entires:
+                        <span id="text-glow">{{ stats["total_entries_count"] }}</span>
+                    </p>
+
+                    <p>Total unique entires:
+                        <span id="text-glow">{{ stats["total_unique_entries_count"] }}</span>
+                    </p>
+                {% endif %}
             </div>
 
             <form action="{{ url_for('dashboard') }}" method="post">

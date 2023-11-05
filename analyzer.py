@@ -113,7 +113,20 @@ class Analyzer:
             months_list.append(month)
         return multimode(hours_list), multimode(days_list), multimode(months_list)
 
-    def analyze(self):
+    def analyze(self, short_url=None):
+        if short_url is not None:
+            self.short_url = short_url
+
+        entries = (
+            db.session.query(Stat.entry_time)
+            .where(Stat.short_url == self.short_url)
+            .all()
+        )
+        entries = [{"entry": entry[0]} for entry in entries]
+
+        total_entries_count = self.total_entries()
+        total_unique_entries_count = self.total_unique_entries()
+
         times = self.most_frequent_times()
         most_frequent_entry_time_of_day = times[0]
         most_frequent_entry_time_of_month = times[1]
@@ -133,6 +146,10 @@ class Analyzer:
             .limit(3)
             .all()
         )
+        top_platforms = [
+            {"platform": platform[0], "count": platform[1]}
+            for platform in top_platforms
+        ]
 
         top_browsers = (
             db.session.query(Stat.browser, func.count(Stat.browser))
@@ -142,6 +159,9 @@ class Analyzer:
             .limit(3)
             .all()
         )
+        top_browsers = [
+            {"browser": browser[0], "count": browser[1]} for browser in top_browsers
+        ]
 
         top_countries = (
             db.session.query(Stat.country, func.count(Stat.country))
@@ -151,6 +171,9 @@ class Analyzer:
             .limit(10)
             .all()
         )
+        top_countries = [
+            {"country": country[0], "count": country[1]} for country in top_countries
+        ]
 
         top_regions = (
             db.session.query(Stat.region, func.count(Stat.region))
@@ -160,6 +183,9 @@ class Analyzer:
             .limit(10)
             .all()
         )
+        top_regions = [
+            {"region": region[0], "count": region[1]} for region in top_regions
+        ]
 
         top_cities = (
             db.session.query(Stat.city, func.count(Stat.city))
@@ -169,6 +195,7 @@ class Analyzer:
             .limit(10)
             .all()
         )
+        top_cities = [{"city": city[0], "count": city[1]} for city in top_cities]
 
         average_distance = (
             db.session.query(func.avg(func.cast(Stat.distance, Float)))
@@ -177,12 +204,15 @@ class Analyzer:
         )
 
         return {
+            "entries": entries,
+            "total_entries_count": total_entries_count,
+            "total_unique_entries_count": total_unique_entries_count,
             "most_frequent_entry_time_of_day": most_frequent_entry_time_of_day,
             "most_frequent_entry_time_of_month": most_frequent_entry_time_of_month,
             "most_frequent_entry_time_of_year": most_frequent_entry_time_of_year,
             "average_response_time": average_response_time,
-            "top_platform": top_platforms,
-            "top_browser": top_browsers,
+            "top_platforms": top_platforms,
+            "top_browsers": top_browsers,
             "top_countries": top_countries,
             "top_regions": top_regions,
             "top_cities": top_cities,

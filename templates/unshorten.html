@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title_right %} | URL Shortener{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/unshorten.css') }}">
+<script src="{{ url_for('static', filename='scripts/copy.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Unshorten a URL</h2>
+    {% if msg: %}<div class="form-msg">{{ msg }}</div>{% endif %}
+    <form action="{{ url_for('unshorten') }}" method="post">
+        <div class="input-box">
+            <input required type="text" name="url">
+            <label for="url">URL</label>
+        </div>
+        <input class="submit-btn" type="submit" value="Search">
+    </form>
+    {% if long_url %}
+        <div class="short-url-container">
+            <input id="copy-text" type="text" value="{{ long_url }}" readonly>
+            <button onclick="copyText()">Copy Short URL</button>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

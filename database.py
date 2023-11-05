@@ -1,6 +1,9 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import getcwd
+from os import getcwd, getenv
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -8,8 +11,8 @@ app.url_map.strict_slashes = False
 
 cwd = getcwd()
 
-app.config["SECRET_KEY"] = "thisissecret"
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{cwd}/shorten.db"
+app.config["SECRET_KEY"] = getenv("SECRET_KEY")
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{cwd}/{getenv('DB')}.db"
 
 db = SQLAlchemy(app)
 
