@@ -14,7 +14,7 @@ analyzer = Analyzer()
 
 def token_required(f):
     @wraps(f)
-    def decorated(*args, **kwargs):
+    def wrapper(*args, **kwargs):
         if "x-access-token" in request.headers:
             provided_token = request.headers["x-access-token"]
         else:
@@ -26,11 +26,11 @@ def token_required(f):
             )
             user = User.query.filter_by(id=token["id"]).first()
         except:
-            return jsonify({"error": "Token is invalid!"}), 401
+            return jsonify({"error": "Token is invalid."}), 401
 
         return f(user, *args, **kwargs)
 
-    return decorated
+    return wrapper
 
 
 @app.route("/api/shorten", methods=["POST"])
@@ -42,30 +42,32 @@ def api_shorten(user):
             return (
                 jsonify(
                     {
-                        "error": "Missing JSON fields.",
-                        "required_fields": "url:str",
-                        "optional_fields": "exp_date:str(%d-%m-%Y.%H:%M), is_permanent:boolean",
+                        "error": "Missing required parameter. url:str",
+                        "optional_parameters": "exp_date:str(%d-%m-%Y.%H:%M), is_permanent:boolean",
                     }
                 ),
                 400,
             )
         elif "url" not in data and user is None:
-            return jsonify({"error": "Missing required JSON field: url:str."}), 400
+            return jsonify({"error": "Missing required parameter. url:str."}), 400
         elif len(data["url"]) == 0:
-            return jsonify({"error": "URL is empty!"}), 400
+            return jsonify({"error": "URL cannot be empty."}), 400
         elif len(data["url"]) > 2048:
-            return jsonify({"error": "URL too long!"}), 400
+            return (
+                jsonify({"error": "URL must be less than 2048 characters long."}),
+                400,
+            )
         elif len(data["url"]) < 6:
-            return jsonify({"error": "URL already short!!!"}), 400
+            return jsonify({"error": "URL must be more than 6 characters long."}), 400
         elif not match(
             r"^((http|https)://)?([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.)+[A-Za-z]{2,}$",
             data["url"],
         ):
-            return jsonify({"error": "Doesn't look like a URL to me :|"}), 400
+            return jsonify({"error": "Invalid URL."}), 400
         elif user is None:
             short_url = Shortener().shorten_url(data["url"])
             return (
-                jsonify({"massage": "Shortenend URL successfully!", "url": short_url}),
+                jsonify({"message": "URL shortened successfully!", "url": short_url}),
                 200,
             )
         elif user is not None:
@@ -74,7 +76,11 @@ def api_shorten(user):
                 "False",
             ]:
                 return (
-                    jsonify({"error": "'is_permanent' only accepts True or False."}),
+                    jsonify(
+                        {
+                            "error": "'is_permanent' must be a boolean value (True or False)."
+                        }
+                    ),
                     400,
                 )
             elif (
@@ -84,9 +90,7 @@ def api_shorten(user):
             ):
                 return (
                     jsonify(
-                        {
-                            "error": "You can Not set an expiration date to a permanent URL."
-                        }
+                        {"error": "Permanent URLs cannot have an expiration date."}
                     ),
                     400,
                 )
@@ -103,7 +107,7 @@ def api_shorten(user):
                 return (
                     jsonify(
                         {
-                            "massage": "Shortenend URL successfully!",
+                            "message": "URL shortened successfully!",
                             "url": short_url,
                         }
                     ),
@@ -114,7 +118,7 @@ def api_shorten(user):
                     return (
                         jsonify(
                             {
-                                "error": "'exp_date' only accepts the '%d-%m-%Y.%H:%M' format."
+                                "error": "Expiration date must be in the '%d-%m-%Y.%H:%M' format."
                             }
                         ),
                         400,
@@ -142,7 +146,7 @@ def api_shorten(user):
                     return (
                         jsonify(
                             {
-                                "error": "Expiration date must be between 5 minutes from now to 50 years in the future"
+                                "error": "Expiration date must be between 5 minutes from now and 50 years in the future."
                             }
                         ),
                         400,
@@ -156,7 +160,7 @@ def api_shorten(user):
                     return (
                         jsonify(
                             {
-                                "massage": "Shortenend URL successfully!",
+                                "message": "URL shortened successfully!",
                                 "url": short_url,
                             }
                         ),
@@ -166,29 +170,29 @@ def api_shorten(user):
                 short_url = Shortener().shorten_url(data["url"], user_id=user.id)
                 return (
                     jsonify(
-                        {"massage": "Shortenend URL successfully!", "url": short_url}
+                        {"message": "URL shortened successfully!", "url": short_url}
                     ),
                     200,
                 )
     except:
-        return jsonify({"error": "No JSON data provided."}), 400
+        return jsonify({"error": "No data provided."}), 400
 
 
 @app.route("/api/get", methods=["GET"])
 @token_required
 def api_get(user):
     if user is None:
-        return jsonify({"error": "Token is missing!"}), 401
+        return jsonify({"error": "No token provided."}), 401
 
     try:
         data = request.get_json()
         if "url" in data:
             if len(data["url"]) == 0:
-                return jsonify({"error": "URL is empty!"}), 400
+                return jsonify({"error": "URL cannot be empty."}), 400
             elif len(data["url"]) > 12:
-                return jsonify({"error": "Well that's not a so short, ain't!"}), 400
+                return jsonify({"error": "URL too long."}), 400
             elif len(data["url"]) < 4:
-                return jsonify({"error": "Oh, now it's too short :|"}), 400
+                return jsonify({"error": "URL too short."}), 400
             else:
                 url = Url.query.filter_by(
                     short_url=data["url"], user_id=user.id
@@ -200,7 +204,7 @@ def api_get(user):
     except:
         urls = db.session.query(Url).where(Url.user_id == user.id)
         if urls.count() <= 0:
-            return jsonify({"massage": "You don't have any URLs"}), 200
+            return jsonify({"message": "You have no URLs."}), 200
         elif urls.count() > 0:
             json_urls = []
             for url in urls:
@@ -215,8 +219,8 @@ def api_get(user):
             return (
                 jsonify(
                     {
-                        "error": "Error occurred.",
-                        "usage": "Run without anything to get all URLs, or to get particular url info Use the JSON field: url:str.",
+                        "error": "An error occurred.",
+                        "usage": "Run without any arguments to get all URLs, or pass a URL in the JSON field url:str to get information about a specific URL.",
                     }
                 ),
                 400,
@@ -227,18 +231,18 @@ def api_get(user):
 @token_required
 def api_update(user):
     if user is None:
-        return jsonify({"error": "Token is missing!"}), 401
+        return jsonify({"error": "No token provided."}), 401
 
     try:
         data = request.get_json()
         if "url" not in data:
-            return jsonify({"error": "Missing required JSON field: url:str."}), 400
+            return jsonify({"error": "Missing required parameter. url:str."}), 400
         elif len(data["url"]) == 0:
-            return jsonify({"error": "URL is empty!"}), 400
+            return jsonify({"error": "URL cannot be empty."}), 400
         elif len(data["url"]) > 12:
-            return jsonify({"error": "Well that's not a so short, ain't!"}), 400
+            return jsonify({"error": "URL too long."}), 400
         elif len(data["url"]) < 4:
-            return jsonify({"error": "Oh, now it's too short :|"}), 400
+            return jsonify({"error": "URL too short."}), 400
 
         url = Url.query.filter_by(short_url=data["url"], user_id=user.id).first()
         if url is None:
@@ -249,7 +253,9 @@ def api_update(user):
             "False",
         ]:
             return (
-                jsonify({"error": "'is_permanent' only accepts True or False."}),
+                jsonify(
+                    {"error": "'is_permanent' must be a boolean value (True or False)."}
+                ),
                 400,
             )
         elif (
@@ -258,11 +264,7 @@ def api_update(user):
             and data["is_permanent"].title() == "False"
         ):
             return (
-                jsonify(
-                    {
-                        "error": "If you set is_permanent to False you have to provide an exp date."
-                    }
-                ),
+                jsonify({"error": "Expiration date required for non-permanent URLs."}),
                 400,
             )
         elif (
@@ -271,9 +273,7 @@ def api_update(user):
             and data["is_permanent"].title() == "True"
         ):
             return (
-                jsonify(
-                    {"error": "You can Not set an expiration date to a permanent URL."}
-                ),
+                jsonify({"error": "Permanent URLs cannot have an expiration date."}),
                 400,
             )
         elif (
@@ -284,13 +284,13 @@ def api_update(user):
             url.is_permanent = True
             url.expiration_date = None
             db.session.commit()
-            return jsonify({"massage": "Updated URL successfully!"}), 200
+            return jsonify({"message": "URL updated successfully!"}), 200
         elif "exp_date" in data:
             if Shortener().check_datetime_format(data["exp_date"]) is False:
                 return (
                     jsonify(
                         {
-                            "error": "'exp_date' only accepts the '%d-%m-%Y.%H:%M' format."
+                            "error": "Expiration date must be in the '%d-%m-%Y.%H:%M' format."
                         }
                     ),
                     400,
@@ -318,7 +318,7 @@ def api_update(user):
                 return (
                     jsonify(
                         {
-                            "error": "Expiration date must be between 5 minutes from now to 50 years in the future"
+                            "error": "Expiration date must be between 5 minutes from now and 50 years in the future."
                         }
                     ),
                     400,
@@ -327,27 +327,27 @@ def api_update(user):
                 url.is_permanent = False
                 url.expiration_date = exp_date.strftime("%d-%m-%Y.%H:%M")
                 db.session.commit()
-                return jsonify({"massage": "Updated URL successfully!"}), 200
+                return jsonify({"message": "URL updated successfully!"}), 200
     except:
-        return jsonify({"error": "No JSON data provided."}), 400
+        return jsonify({"error": "No data provided."}), 400
 
 
 @app.route("/api/delete", methods=["DELETE"])
 @token_required
 def api_delete(user):
     if user is None:
-        return jsonify({"error": "Token is missing!"}), 401
+        return jsonify({"error": "No token provided."}), 401
 
     try:
         data = request.get_json()
         if "url" not in data:
-            return jsonify({"error": "Missing required JSON field: url:str."}), 400
+            return jsonify({"error": "Missing required parameter. url:str."}), 400
         elif len(data["url"]) == 0:
-            return jsonify({"error": "URL is empty!"}), 400
+            return jsonify({"error": "URL cannot be empty."}), 400
         elif len(data["url"]) > 12:
-            return jsonify({"error": "Well that's not a so short, ain't!"}), 400
+            return jsonify({"error": "URL too long."}), 400
         elif len(data["url"]) < 4:
-            return jsonify({"error": "Oh, now it's too short :|"}), 400
+            return jsonify({"error": "URL too short."}), 400
 
         url = Url.query.filter_by(short_url=data["url"], user_id=user.id).first()
         if url is None:
@@ -357,26 +357,26 @@ def api_delete(user):
         analyzer.delete()
         db.session.delete(url)
         db.session.commit()
-        return jsonify({"massage": "Deleted URL successfully!"}), 200
+        return jsonify({"message": "URL deleted successfully!"}), 200
     except:
-        return jsonify({"error": "No JSON data provided."}), 400
+        return jsonify({"error": "No data provided."}), 400
 
 
 @app.route("/api/stats", methods=["GET"])
 @token_required
 def api_stats(user):
     if user is None:
-        return jsonify({"error": "Token is missing!"}), 401
+        return jsonify({"error": "No token provided."}), 401
 
     try:
         data = request.get_json()
         if "url" in data:
             if len(data["url"]) == 0:
-                return jsonify({"error": "URL is empty!"}), 400
+                return jsonify({"error": "URL cannot be empty."}), 400
             elif len(data["url"]) > 12:
-                return jsonify({"error": "Well that's not a so short, ain't!"}), 400
+                return jsonify({"error": "URL too long."}), 400
             elif len(data["url"]) < 4:
-                return jsonify({"error": "Oh, now it's too short :|"}), 400
+                return jsonify({"error": "URL too short."}), 400
             else:
                 url = Url.query.filter_by(
                     short_url=data["url"], user_id=user.id
@@ -422,7 +422,7 @@ def api_stats(user):
     except:
         urls = db.session.query(Url).where(Url.user_id == user.id)
         if urls.count() <= 0:
-            return jsonify({"massage": "You don't have any URLs"}), 200
+            return jsonify({"message": "You have no URLs."}), 200
         elif urls.count() > 0:
             json_urls = []
             for url in urls:
@@ -462,7 +462,7 @@ def api_stats(user):
                 jsonify(
                     {
                         "error": "Error occurred.",
-                        "usage": "Run without anything to get stats for all URLs, or to get stats for particular url info Use the JSON field: url:str.",
+                        "usage": "Run without any arguments to get all URLs, or pass a URL in the JSON field url:str to get information about a specific URL.",
                     }
                 ),
                 400,
