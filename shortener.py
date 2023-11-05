@@ -92,3 +92,16 @@ class Shortener:
         url = Url.query.filter_by(short_url=short_url).first()
         db.session.delete(url)
         db.session.commit()
+
+    def delete_expired_urls(self):
+        current_time = datetime.datetime.now().strftime("%d-%m-%Y.%H:%M")
+        expired_urls = db.session.query(Url).where(Url.expiration_date <= current_time)
+        if expired_urls.count() > 0:
+            from analyzer import Analyzer
+
+            analyzer = Analyzer()
+            for url in expired_urls:
+                analyzer.short_url = url.short_url
+                analyzer.delete()
+                db.session.delete(url)
+                db.session.commit()
