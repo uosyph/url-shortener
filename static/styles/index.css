@@ -140,6 +140,17 @@
 }
 
 .container .short-url-container button svg {
-	margin-left: -32px;
 	vertical-align: middle;
+}
+
+.container .short-url-container #copy-url svg {
+	margin-left: -32px;
+}
+
+.container .short-url-container #generate-qr svg {
+	margin-left: -120px;
+}
+
+.container .short-url-container #qrcode {
+	margin-top: 20px;
 }
