@@ -1,3 +1,12 @@
+"""
+URL Shortener API
+
+This API provides endpoints for URL shortening, retrieval, updates, deletions, and statistics.
+It uses JWT tokens for user authentication and authorization, communicating with a database for URL storage and analytics.
+
+Author: Yousef Saeed
+"""
+
 from flask import request, jsonify
 from functools import wraps
 from jwt import decode
@@ -13,6 +22,16 @@ analyzer = Analyzer()
 
 
 def token_required(f):
+    """
+    A decorator function to validate tokens before accessing the API endpoints.
+
+    Args:
+        f (function): The function to be wrapped.
+
+    Returns:
+        function: The decorated function that validates tokens.
+    """
+
     @wraps(f)
     def wrapper(*args, **kwargs):
         if "x-access-token" in request.headers:
@@ -36,6 +55,16 @@ def token_required(f):
 @app.route("/api/shorten", methods=["POST"])
 @token_required
 def api_shorten(user):
+    """
+    Shorten a URL via the API.
+
+    Args:
+        user (User): The authenticated user (or None for unauthenticated requests).
+
+    Returns:
+        JSON response: JSON response indicating success or failure.
+    """
+
     try:
         data = request.get_json()
         if "url" not in data and user is not None:
@@ -181,6 +210,16 @@ def api_shorten(user):
 @app.route("/api/get", methods=["GET"])
 @token_required
 def api_get(user):
+    """
+    Retrieve URL data via the API.
+
+    Args:
+        user (User): The authenticated user (or None for unauthenticated requests).
+
+    Returns:
+        JSON response: JSON response with URL data.
+    """
+
     if user is None:
         return jsonify({"error": "No token provided."}), 401
 
@@ -230,6 +269,16 @@ def api_get(user):
 @app.route("/api/update", methods=["PUT"])
 @token_required
 def api_update(user):
+    """
+    Update URL settings via the API.
+
+    Args:
+        user (User): The authenticated user (or None for unauthenticated requests).
+
+    Returns:
+        JSON response: JSON response indicating success or failure.
+    """
+
     if user is None:
         return jsonify({"error": "No token provided."}), 401
 
@@ -335,6 +384,16 @@ def api_update(user):
 @app.route("/api/delete", methods=["DELETE"])
 @token_required
 def api_delete(user):
+    """
+    Delete a URL via the API.
+
+    Args:
+        user (User): The authenticated user (or None for unauthenticated requests).
+
+    Returns:
+        JSON response: JSON response indicating success or failure.
+    """
+
     if user is None:
         return jsonify({"error": "No token provided."}), 401
 
@@ -365,6 +424,16 @@ def api_delete(user):
 @app.route("/api/stats", methods=["GET"])
 @token_required
 def api_stats(user):
+    """
+    Retrieve statistics for URLs via the API.
+
+    Args:
+        user (User): The authenticated user (or None for unauthenticated requests).
+
+    Returns:
+        JSON response: JSON response with URL statistics.
+    """
+
     if user is None:
         return jsonify({"error": "No token provided."}), 401
 

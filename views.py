@@ -1,3 +1,13 @@
+"""
+URL Shortener Web Application
+
+This web application provides a URL shortening service that allows users to generate short URLs for long web addresses.
+It includes functionality for creating, managing, and resolving short URLs.
+The short URLs can have optional expiration dates, and users can register and log in to manage their URLs.
+
+Author: Yousef Saeed
+"""
+
 from flask import abort, request, session, render_template, redirect, url_for
 from sqlalchemy import desc
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -20,6 +30,16 @@ analyzer = Analyzer()
 
 
 def measure_response_time(f):
+    """
+    Redirect to the original URL associated with a short URL.
+
+    Args:
+        short_url (str): The short URL to resolve.
+
+    Returns:
+        redirect: Redirects to the original URL if found, or a 404 error if not found.
+    """
+
     @wraps(f)
     def wrapper(*args, **kwargs):
         start_time = time()
@@ -33,6 +53,15 @@ def measure_response_time(f):
 
 @app.before_request
 def clear_trailing():
+    """
+    Remove trailing slashes from URL paths before processing.
+
+    If a URL path ends with a '/', this function redirects to the same URL without the trailing '/'.
+
+    Returns:
+        redirect: A redirect to the URL without the trailing slash.
+    """
+
     rp = request.path
     if rp != "/" and rp.endswith("/"):
         return redirect(rp[:-1])
@@ -41,6 +70,16 @@ def clear_trailing():
 @app.route("/<short_url>")
 @measure_response_time
 def redirect_url(short_url):
+    """
+    Decorator to measure the response time of a view function.
+
+    Args:
+        f (function): The view function to be measured.
+
+    Returns:
+        function: The wrapped view function.
+    """
+
     url = Url.query.filter_by(short_url=short_url).first()
     if url is not None:
         analyzer.short_url = short_url
@@ -56,6 +95,15 @@ def redirect_url(short_url):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    """
+    Display the main index page with URL shortening functionality.
+
+    Handles the URL shortening form, user registration, and login.
+
+    Returns:
+        render_template: Renders the index.html template with relevant data.
+    """
+
     msg = ""
     short_url = None
     current_time = datetime.datetime.now()
@@ -132,6 +180,13 @@ def index():
 
 @app.route("/unshorten", methods=["GET", "POST"])
 def unshorten():
+    """
+    Display the unshorten page to expand a short URL into its original form.
+
+    Returns:
+        render_template: Renders the unshorten.html template with relevant data.
+    """
+
     msg = ""
     long_url = None
 
@@ -154,6 +209,13 @@ def unshorten():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """
+    Handle user registration and account creation.
+
+    Returns:
+        render_template: Renders the register.html template with relevant data.
+    """
+
     logout()
 
     msg = ""
@@ -205,6 +267,13 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """
+    Handle user login and session creation.
+
+    Returns:
+        render_template: Renders the login.html template with relevant data.
+    """
+
     logout()
 
     msg = ""
@@ -239,6 +308,13 @@ def login():
 
 @app.route("/logout")
 def logout():
+    """
+    Log out the current user and clear their session.
+
+    Returns:
+        redirect: Redirects to the index page after logging out.
+    """
+
     session.pop("loggedin", None)
     session.pop("id", None)
     session.pop("username", None)
@@ -247,6 +323,13 @@ def logout():
 
 @app.route("/account", methods=["GET", "POST"])
 def account():
+    """
+    Display the user account page and manage user account settings.
+
+    Returns:
+        render_template: Renders the account.html template with relevant data.
+    """
+
     if "loggedin" in session and session["loggedin"]:
         msg = ""
         tab = "profile"
@@ -342,6 +425,13 @@ def account():
 
 @app.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
+    """
+    Display the user dashboard for managing shortened URLs.
+
+    Returns:
+        render_template: Renders the dashboard.html template with relevant data.
+    """
+
     if "loggedin" in session and session["loggedin"]:
         msg = ""
         current_time = datetime.datetime.now()
@@ -434,11 +524,31 @@ def dashboard():
 
 @app.errorhandler(404)
 def page_not_found(e):
+    """
+    Handle a 404 Page Not Found error.
+
+    Args:
+        e: The error object.
+
+    Returns:
+        render_template: Renders the 404.html template for a 404 error.
+    """
+
     return render_template("404.html"), 404
 
 
 @app.errorhandler(401)
 def unauthorized(e):
+    """
+    Handle an unauthorized (401) error.
+
+    Args:
+        e: The error object.
+
+    Returns:
+        redirect: Redirects to the index page for an unauthorized user.
+    """
+
     return redirect(url_for("index"))
 
 

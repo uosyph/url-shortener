@@ -1,3 +1,16 @@
+"""
+URL Analyzer Module
+
+This module provides analytics functionality for tracking user interactions with short URLs.
+It collects information about user agents, response times, IP addresses, and geolocation data.
+It can generate statistics such as entry times, platform usage, browser usage, and location information for a given short URL.
+
+Classes:
+    - Analyzer: The main class for tracking and analyzing user interactions with short URLs.
+
+Author: Yousef Saeed
+"""
+
 from flask import request
 from sqlalchemy import func, Float
 from ua_parser import user_agent_parser
@@ -10,19 +23,67 @@ from database import *
 
 
 class Analyzer:
+    """
+    Analyzer is a class for tracking and analyzing user interactions with short URLs.
+
+    Attributes:
+        - short_url (str): The short URL being analyzed.
+        - user_agent (str): The user agent string from the client's browser.
+        - response_time (str): The response time of the server.
+
+    Methods:
+        - get_entry_time()
+        - get_platform()
+        - get_browser()
+        - get_ip()
+        - get_location()
+        - get_distance()
+        - track()
+        - total_entries()
+        - total_unique_entries()
+        - most_frequent_times()
+        - analyze(short_url=None)
+        - delete()
+    """
+
     def __init__(self):
+        """
+        Initialize Analyzer with default attributes and parse user agent details.
+        """
+
         self.short_url = ""
         self.user_agent = ""
         self.response_time = ""
         self.user_details = user_agent_parser.Parse(self.user_agent)
 
     def get_entry_time(self):
+        """
+        Get the current entry time in the format "%d-%m-%Y.%H:%M:%S".
+
+        Returns:
+            str: The current entry time.
+        """
+
         return datetime.datetime.now().strftime("%d-%m-%Y.%H:%M:%S")
 
     def get_platform(self):
+        """
+        Get the platform (OS) of the client from the user agent.
+
+        Returns:
+            str: The platform (OS) of the client.
+        """
+
         return self.user_details["os"]["family"]
 
     def get_browser(self):
+        """
+        Get the browser and version from the user agent.
+
+        Returns:
+            str: The browser and its version.
+        """
+
         browser = self.user_details["user_agent"]["family"]
         browser_version = ".".join(
             [
@@ -34,6 +95,13 @@ class Analyzer:
         return f"{browser}-{browser_version}"
 
     def get_ip(self):
+        """
+        Get the client's IP address, considering the possibility of being behind a proxy.
+
+        Returns:
+            str: The client's IP address.
+        """
+
         if request.environ.get("HTTP_X_FORWARDED_FOR") is None:
             return request.environ["REMOTE_ADDR"]
         else:
@@ -41,6 +109,13 @@ class Analyzer:
             return request.environ["HTTP_X_FORWARDED_FOR"]
 
     def get_location(self):
+        """
+        Get geolocation details (city, region, country, latitude, longitude) of the client based on their IP address.
+
+        Returns:
+            dict: Geolocation details of the client.
+        """
+
         client_ip = self.get_ip()
         client_details = DbIpCity.get(client_ip)
         return {
@@ -52,6 +127,13 @@ class Analyzer:
         }
 
     def get_distance(self):
+        """
+        Calculate the distance in kilometers between the client and the server based on their IP addresses' geolocation.
+
+        Returns:
+            float: The distance between the client and the server.
+        """
+
         client_ip = self.get_ip()
         server_ip = request.remote_addr
         client_details = DbIpCity.get(client_ip)
@@ -62,6 +144,13 @@ class Analyzer:
         ).km
 
     def track(self):
+        """
+        Track user interactions and store the details in the database as a Stat record.
+
+        Returns:
+            None
+        """
+
         client_location = self.get_location()
 
         new_stat = Stat(
@@ -82,10 +171,24 @@ class Analyzer:
         db.session.commit()
 
     def total_entries(self):
+        """
+        Calculate the total number of entries for the current short URL.
+
+        Returns:
+            int: The total number of entries.
+        """
+
         urls = db.session.query(Stat).where(Stat.short_url == self.short_url)
         return urls.count()
 
     def total_unique_entries(self):
+        """
+        Calculate the total number of unique entries (unique IPs) for the current short URL.
+
+        Returns:
+            int: The total number of unique entries.
+        """
+
         urls = (
             db.session.query(Stat)
             .where(Stat.short_url == self.short_url)
@@ -94,6 +197,13 @@ class Analyzer:
         return urls.count()
 
     def most_frequent_times(self):
+        """
+        Determine the most frequent entry times of the day, month, and year for the current short URL.
+
+        Returns:
+            tuple: A tuple containing the most frequent entry times of the day, month, and year.
+        """
+
         urls = db.session.query(Stat).where(Stat.short_url == self.short_url)
         hours_list = []
         days_list = []
@@ -114,6 +224,16 @@ class Analyzer:
         return multimode(hours_list), multimode(days_list), multimode(months_list)
 
     def analyze(self, short_url=None):
+        """
+        Analyze user interactions and generate statistics for a given short URL.
+
+        Args:
+            short_url (str, optional): The short URL to analyze. If not provided, uses the stored short URL.
+
+        Returns:
+            dict: A dictionary containing various statistics and details of user interactions.
+        """
+
         if short_url is not None:
             self.short_url = short_url
 
@@ -220,6 +340,13 @@ class Analyzer:
         }
 
     def delete(self):
+        """
+        Delete all records associated with the current short URL from the database.
+
+        Returns:
+            None
+        """
+
         urls = db.session.query(Stat).where(Stat.short_url == self.short_url)
         for url in urls:
             db.session.delete(url)
