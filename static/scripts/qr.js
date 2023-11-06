@@ -24,4 +24,13 @@ function generateQRCode() {
 
 	// Show the QR code container
 	qrCodeContainer.style.display = "block";
+
+	// Create a download button
+	const downloadButton = document.createElement("a");
+	downloadButton.innerText = "Download QR Code";
+	downloadButton.href = qrCodeContainer.querySelector("img").src;
+	downloadButton.download = "qrcode.png"; // Set the file name for download
+
+	// Append the download button to the QR code container
+	qrCodeContainer.appendChild(downloadButton);
 }

@@ -154,3 +154,13 @@
 .container .short-url-container #qrcode {
 	margin-top: 20px;
 }
+
+.container .short-url-container #qrcode a {
+	font-size: 15px;
+	color: #bb86fc;
+	transition: 0.3s ease;
+}
+
+.container .short-url-container #qrcode a:hover {
+	opacity: 80%;
+}
