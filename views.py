@@ -31,13 +31,13 @@ analyzer = Analyzer()
 
 def measure_response_time(f):
     """
-    Redirect to the original URL associated with a short URL.
+    Decorator to measure the response time of a view function.
 
     Args:
-        short_url (str): The short URL to resolve.
+        f (function): The view function to be measured.
 
     Returns:
-        redirect: Redirects to the original URL if found, or a 404 error if not found.
+        function: The wrapped view function.
     """
 
     @wraps(f)
@@ -71,13 +71,13 @@ def clear_trailing():
 @measure_response_time
 def redirect_url(short_url):
     """
-    Decorator to measure the response time of a view function.
+    Redirect to the original URL associated with a short URL.
 
     Args:
-        f (function): The view function to be measured.
+        short_url (str): The short URL to resolve.
 
     Returns:
-        function: The wrapped view function.
+        redirect: Redirects to the original URL if found, or a 404 error if not found.
     """
 
     url = Url.query.filter_by(short_url=short_url).first()
