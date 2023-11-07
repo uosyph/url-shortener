@@ -12,9 +12,9 @@
     <h2>Account Settings</h2>
 
     <div class="content">
-        <input class="slider-radio" type="radio" name="slider" id="profile" checked>
-        <input class="slider-radio" type="radio" name="slider" id="security">
-        <input class="slider-radio" type="radio" name="slider" id="authn">
+        <input class="slider-radio" type="radio" name="slider" id="profile" {% if tab == "profile" %} checked {% endif %}>
+        <input class="slider-radio" type="radio" name="slider" id="security" {% if tab == "security" %} checked {% endif %}>
+        <input class="slider-radio" type="radio" name="slider" id="authn" {% if tab == "authn" %} checked {% endif %}>
 
         <div class="list">
             <label for="profile" class="profile">
@@ -83,7 +83,11 @@
                     <div class="title">Current Token</div>
                     <div class="token-container">
                         <input id="copy-text" type="text" value="{{ user_token }}" readonly>
-                        <button onclick="copyText()">Copy Token</button>
+                        <button onclick="copyText()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="22px" height="22px" fill="#bb86fc">
+                                <path d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16l140.1 0L400 115.9V320c0 8.8-7.2 16-16 16zM192 384H384c35.3 0 64-28.7 64-64V115.9c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1H192c-35.3 0-64 28.7-64 64V320c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H256c35.3 0 64-28.7 64-64V416H272v32c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16H96V128H64z"/>
+                            </svg>
+                        </button>
                     </div>
 
                     <hr>

@@ -1,9 +1,11 @@
 Flask
 Flask-SQLAlchemy
+SQLAlchemy
+Werkzeug
 PyJWT
 ua_parser
 ip2geotools
 geopy
 pycountry
 humanize
-dotenv
+python-dotenv
