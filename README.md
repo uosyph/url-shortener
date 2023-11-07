@@ -6,6 +6,7 @@ A URL shortener aims to solve the problem of long and cumbersome URLs by providi
 
 - [Features](#features)
 - [Installation](#installation)
+- [Environment Configuration](#environment-configuration)
 - [License](#license)
 - [Author](#author)
 
@@ -42,6 +43,10 @@ pip install -r requirements.txt
 ```sh
 python app.py
 ```
+
+## Environment Configuration
+
+In this repository, you will find a file named `.env`. This file contains sensitive configuration information and is typically not included in version control systems. However, I've included it here for your convenience to help you get started quickly without having to create it yourself.
 
 ## License
 
