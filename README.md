@@ -38,6 +38,12 @@ git clone https://github.com/yousafesaeed/url-shortener.git && cd url-shortener
 pip install -r requirements.txt
 ```
 
+**Build the Database:**
+
+```sh
+python database.py
+```
+
 **Run the App:**
 
 ```sh
