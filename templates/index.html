@@ -12,7 +12,7 @@
 
 {% block body %}
 <div class="container">
-    <h2>Shorten URLs for Free</h2>
+    <h2>Shorten your URLs, lengthen your reach.</h2>
     {% if msg: %}<div class="form-msg">{{ msg }}</div>{% endif %}
     <form action="{{ url_for('index') }}" method="post">
         <div class="input-box">
@@ -32,7 +32,7 @@
         {% endif %}
         <input class="submit-btn" type="submit" value="Shorten">
     </form>
-    {#{% if short_url %}#}
+    {% if short_url %}
         <div class="short-url-container">
             <input id="copy-text" class="short-url" type="text" value="{{ request.host }}/{{ short_url }}" readonly>
             <button id="copy-url" onclick="copyText()">
@@ -46,6 +46,6 @@
                 </svg>
             </button>
         </div>
-    {#{% endif %}#}
+    {% endif %}
 </div>
 {% endblock %}
