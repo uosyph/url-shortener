@@ -1,28 +1,68 @@
+<a name="readme-top"></a>
+
 # Shorten
 
-A URL shortener aims to solve the problem of long and cumbersome URLs by providing a simple and convenient way to shorten and manage URLs.
+In a world cluttered with lengthy and cumbersome URLs, a lone developer,
+driven by the frustration of sharing convoluted web addresses,
+embarked on a quest to simplify the digital landscape.
+This is the tale of "Shorten," a URL shortener born out of necessity.
+
+[Try it here](http://54.236.51.83/)
 
 ## Table of Contents
 
 - [Features](#features)
+- [Screenshots](#screenshots)
 - [Installation](#installation)
 - [Environment Configuration](#environment-configuration)
+- [Contributing](#contributing)
 - [License](#license)
 - [Author](#author)
 
 ## Features
 
-It includes the following features:
+Shorten isn't just a mere URL shortener;
+it's a comprehensive solution tailored for both casual users and those seeking advanced functionality.
+Let's delve into its features:
 
-- **User management**: Users can create accounts, log in, and generate tokens to be used in the API. This allows them to access additional functionality, such as creating permanent or time-limited short URLs.
-- **Dashboard and analytics**: Logged-in users have access to a personalized dashboard where they can view analytics for their URLs and manage their shortened URLs, including click-through rates and referral sources.
-- **QR code generation**: Users can generate QR codes for their shortened URLs for easy sharing.
-- **URL Management**: Logged-in users can manage their URLs by deleting them or changing their expiration date if they no longer wish to keep them active or want to extend their lifespan.
-- **Limited functionality for non-logged-in users**: Non-logged-in users can still use the URL shortening service, but their shortened URLs have a lifespan of 7 days before being automatically deleted.
-- **User interface**: The service has a visually appealing index page and a dashboard page for logged-in users to manage their URLs and view analytics. A custom 404 page is also implemented to handle invalid URLs.
-- **API**: The project also includes an API that allows users to send requests and receive responses programmatically, enabling integration with other applications and services. Tokens generated in the "User management" section will be used in many of the API operations.
+### User Management
+Users can create accounts, log in, and generate tokens for API access,
+unlocking a realm of possibilities like creating permanent or time-limited short URLs.
 
-In summary, the URL Shortener project provides a comprehensive solution for shortening, managing, and tracking URLs, with features to suit both logged-in and non-logged-in users. Users can also generate tokens for API access, and these tokens will play a significant role in various API operations.
+### Limited Functionality for Non-Logged-In Users
+Even without an account, users can still benefit from URL shortening, but with a 7-day lifespan for their links.
+
+### Dashboard and Analytics
+Logged-in users are treated to a personalized dashboard, providing insights into URL analytics,
+click-through rates, and referral sources.
+
+### API Integration
+Shorten goes beyond the browser with a robust API, allowing programmatic URL management.
+Tokens obtained by users enable secure API operations.
+
+### URL Management
+Fine-tune control with the ability to delete URLs or adjust their expiration date.
+
+### QR Code Generation
+Simplify sharing further with QR codes generated effortlessly for shortened URLs.
+
+### User Interface
+An aesthetically pleasing index page, a feature-rich dashboard,
+and a custom 404 page showcase Shorten's commitment to a seamless user experience.
+
+In summary, the URL Shortener project provides a comprehensive solution for shortening, managing,
+and tracking URLs, with features to suit both logged-in and non-logged-in users.
+
+## Screenshots
+
+### Shortener
+![Shortener Page Preview](/screenshots/shortener.png)
+
+### Dashboard
+![Dashboard Page Preview](/screenshots/dashboard.png)
+
+### Account
+![Account Page Preview](/screenshots/account.png)
 
 ## Installation
 
@@ -52,7 +92,30 @@ python app.py
 
 ## Environment Configuration
 
-In this repository, you will find a file named `.env`. This file contains sensitive configuration information and is typically not included in version control systems. However, I've included it here for your convenience to help you get started quickly without having to create it yourself.
+In this repository, you will find a file named `.env`.
+This file contains sensitive configuration information and is typically not included in version control systems.
+However, I've included it here for your convenience to help you get started quickly without having to create it yourself.
+
+## Contributing
+
+### Development
+
+To fix a bug or enhance an existing feature, follow these steps:
+
+- Fork the repo
+- Create a new branch (`git checkout -b improve-feature`)
+- Make the necessary changes
+- Add changes to reflect updates
+- Commit your changes (`git commit -am 'Improve feature'`)
+- Push to the branch (`git push origin improve-feature`)
+- Create a Pull Request
+
+### Bug/Feature Request
+
+If you find a bug or want to request a new feature:
+
+- For bugs, open an issue with details about the problem.
+- For feature requests, open an issue with your suggestions.
 
 ## License
 
@@ -60,4 +123,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Author
 
-**Yousef Saeed**
+**Yousef Saeed**:
+[GitHub](https://github.com/yousafesaeed)
+[LinkedIn](https://linkedin.com/in/yousafesaeed)
+[X](https://twitter.com/yousafesaeed)
+
+<p align="right"><a href="#readme-top">Back to Top</a></p>
