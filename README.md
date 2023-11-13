@@ -102,20 +102,20 @@ However, I've included it here for your convenience to help you get started quic
 
 To fix a bug or enhance an existing feature, follow these steps:
 
-- Fork the repo
+- [Fork the repo](https://github.com/yousafesaeed/url-shortener/fork)
 - Create a new branch (`git checkout -b improve-feature`)
 - Make the necessary changes
 - Add changes to reflect updates
 - Commit your changes (`git commit -am 'Improve feature'`)
 - Push to the branch (`git push origin improve-feature`)
-- Create a Pull Request
+- [Create a Pull Request](https://github.com/yousafesaeed/url-shortener/compare)
 
 ### Bug/Feature Request
 
 If you find a bug or want to request a new feature:
 
-- For bugs, open an issue with details about the problem.
-- For feature requests, open an issue with your suggestions.
+- For bugs, [open an issue](https://github.com/yousafesaeed/url-shortener/issues/new/choose) with details about the problem.
+- For feature requests, [open an issue](https://github.com/yousafesaeed/url-shortener/issues/new/choose) with your suggestions.
 
 ## License
 
