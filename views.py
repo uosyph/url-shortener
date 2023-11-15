@@ -126,10 +126,10 @@ def index():
                 "That URL is already pretty short! Any shorter and it might disappear!"
             )
         elif not match(
-            r"^((http|https)://)?([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.)+[A-Za-z]{2,}$",
+            r"^(https?://)?([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.)+[A-Za-z]{2,}$",
             long_url,
         ):
-            msg = "Hmm, that doesn't look like a valid URL to us. Can you double-check it?"
+            msg = "Hmm, that doesn't look like a valid URL 🤔. Can you double-check it?"
         else:
             if "loggedin" in session and session["loggedin"]:
                 if "is_permanent" in request.form:

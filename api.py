@@ -89,7 +89,7 @@ def api_shorten(user):
         elif len(data["url"]) < 6:
             return jsonify({"error": "URL must be more than 6 characters long."}), 400
         elif not match(
-            r"^((http|https)://)?([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.)+[A-Za-z]{2,}$",
+            r"^(https?://)?([A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.)+[A-Za-z]{2,}$",
             data["url"],
         ):
             return jsonify({"error": "Invalid URL."}), 400
