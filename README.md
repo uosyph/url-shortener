@@ -14,6 +14,7 @@ This is the tale of "Shorten," a URL shortener born out of necessity.
 - [Features](#features)
 - [Screenshots](#screenshots)
 - [Installation](#installation)
+- [API Usage](#api-usage)
 - [Environment Configuration](#environment-configuration)
 - [Contributing](#contributing)
 - [License](#license)
@@ -88,6 +89,83 @@ python database.py
 
 ```sh
 python app.py
+```
+
+## API Usage
+
+### Authentication
+
+All API endpoints require authentication using JWT tokens.
+Include the token in the header of your requests as follows:
+
+```
+Header: x-access-token: YOUR_JWT_TOKEN
+```
+
+### Endpoints
+
+#### Shorten a URL
+
+- Endpoint: `/shorten`
+- Method: `POST`
+- Request Body:
+
+```json
+{
+  "url": "YOUR_LONG_URL",
+  "is_permanent": true,   // Optional
+  "exp_date": "dd-mm-yyyy.HH:MM"   // Optional
+}
+```
+
+#### Retrieve Orignal URL
+
+- Endpoint: `/get`
+- Method: `GET`
+- Request Body:
+
+```json
+{
+  "url": "SHORTENED_URL"   // Optional
+}
+```
+
+#### Retrieve URL Statistics
+
+- Endpoint: `/stats`
+- Method: `GET`
+- Request Body:
+
+```json
+{
+  "url": "SHORTENED_URL"   // Optional
+}
+```
+
+#### Update URL Settings
+
+- Endpoint: `/update`
+- Method: `PUT`
+- Request Body:
+
+```json
+{
+  "url": "SHORTENED_URL",
+  "is_permanent": true,   // Optional
+  "exp_date": "dd-mm-yyyy.HH:MM"   // Optional
+}
+```
+
+#### Delete a URL
+
+- Endpoint: `/delete`
+- Method: `DELETE`
+- Request Body:
+
+```json
+{
+  "url": "SHORTENED_URL"
+}
 ```
 
 ## Environment Configuration
