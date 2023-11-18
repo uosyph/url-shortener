@@ -13,9 +13,10 @@ This is the tale of "Shorten," a URL shortener born out of necessity.
 
 - [Features](#features)
 - [Screenshots](#screenshots)
-- [Installation](#installation)
 - [API Usage](#api-usage)
 - [Environment Configuration](#environment-configuration)
+- [Local Development](#local-development)
+- [Production Deployment](#production-deployment)
 - [Contributing](#contributing)
 - [License](#license)
 - [Author](#author)
@@ -65,7 +66,97 @@ and tracking URLs, with features to suit both logged-in and non-logged-in users.
 ### Account
 ![Account Page Preview](/screenshots/account.png)
 
-## Installation
+## API Usage
+
+### Authentication
+
+All API endpoints require authentication using JWT tokens.
+Include the token in the header of your requests as follows:
+
+```
+Header: x-access-token: YOUR_JWT_TOKEN
+```
+
+### Endpoints
+
+#### Shorten a URL
+
+- Endpoint: `/api/shorten`
+- Method: `POST`
+- Request Body:
+
+```json
+{
+  "url": "YOUR_LONG_URL",
+  "is_permanent": true,   // Optional
+  "exp_date": "dd-mm-yyyy.HH:MM"   // Optional
+}
+```
+
+#### Retrieve Orignal URL
+
+- Endpoint: `/api/get`
+- Method: `GET`
+- Request Body:
+
+```json
+{
+  "url": "SHORTENED_URL"   // Optional
+}
+```
+
+#### Retrieve URL Statistics
+
+- Endpoint: `/api/stats`
+- Method: `GET`
+- Request Body:
+
+```json
+{
+  "url": "SHORTENED_URL"   // Optional
+}
+```
+
+#### Update URL Settings
+
+- Endpoint: `/api/update`
+- Method: `PUT`
+- Request Body:
+
+```json
+{
+  "url": "SHORTENED_URL",
+  "is_permanent": true,   // Optional
+  "exp_date": "dd-mm-yyyy.HH:MM"   // Optional
+}
+```
+
+#### Delete a URL
+
+- Endpoint: `/api/delete`
+- Method: `DELETE`
+- Request Body:
+
+```json
+{
+  "url": "SHORTENED_URL"
+}
+```
+
+## Environment Configuration
+
+To run this project, you need to set up your environment variables.
+
+Create a file named `.env` in the root of the project and add the following configuration:
+
+```env
+DB=database_name
+TEST_DB=test_database_name
+ENV=your_environment
+SECRET_KEY=your_secret_key
+```
+
+## Local Development
 
 **Clone the Repository:**
 
@@ -91,88 +182,109 @@ python database.py
 python app.py
 ```
 
-## API Usage
+## Production Deployment
 
-### Authentication
+### Prerequisites
 
-All API endpoints require authentication using JWT tokens.
-Include the token in the header of your requests as follows:
+Ensure the following prerequisites are installed on the server:
 
+- `Nginx`, `Python`, and `pip`.
+- The `venv` module for Python.
+- A WSGI server like `Gunicorn`.
+- A terminal multiplexer like `tmux`.
+
+### Configure Nginx
+
+**Create a Configuration File:**
+
+```bash
+sudo vi /etc/nginx/sites-available/shorten
 ```
-Header: x-access-token: YOUR_JWT_TOKEN
-```
 
-### Endpoints
+**Add the Following Configuration:**
 
-#### Shorten a URL
+```nginx
+server {
+    listen 80;
+    server_name 0.0.0.0;  # Use the actual domain or IP address
 
-- Endpoint: `/shorten`
-- Method: `POST`
-- Request Body:
+    location / {
+        proxy_pass http://127.0.0.1:5000;  # Match the Gunicorn host and port
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
 
-```json
-{
-  "url": "YOUR_LONG_URL",
-  "is_permanent": true,   // Optional
-  "exp_date": "dd-mm-yyyy.HH:MM"   // Optional
+    location /static/ {
+        alias /home/ubuntu/shorten/static/;
+    }
+
+    location /favicon.ico {
+        alias /home/ubuntu/shorten/static/images/favicon.ico;
+    }
+
+    error_page 404 /404.html;
+    location /404.html {
+        root /home/ubuntu/shorten/templates/;
+    }
 }
 ```
 
-#### Retrieve Orignal URL
+**Create a Symbolic Link to Enable the Configuration:**
 
-- Endpoint: `/get`
-- Method: `GET`
-- Request Body:
-
-```json
-{
-  "url": "SHORTENED_URL"   // Optional
-}
+```bash
+sudo ln -s /etc/nginx/sites-available/shorten /etc/nginx/sites-enabled/
 ```
 
-#### Retrieve URL Statistics
+**Test Nginx Configuration:**
 
-- Endpoint: `/stats`
-- Method: `GET`
-- Request Body:
-
-```json
-{
-  "url": "SHORTENED_URL"   // Optional
-}
+```bash
+sudo nginx -t
 ```
 
-#### Update URL Settings
+**Restart Nginx:**
 
-- Endpoint: `/update`
-- Method: `PUT`
-- Request Body:
-
-```json
-{
-  "url": "SHORTENED_URL",
-  "is_permanent": true,   // Optional
-  "exp_date": "dd-mm-yyyy.HH:MM"   // Optional
-}
+```bash
+sudo systemctl restart nginx
 ```
 
-#### Delete a URL
+### Deploy the Application
 
-- Endpoint: `/delete`
-- Method: `DELETE`
-- Request Body:
+**Clone the Repository on the Server:**
 
-```json
-{
-  "url": "SHORTENED_URL"
-}
+```bash
+git clone https://github.com/yousafesaeed/url-shortener.git shorten
 ```
 
-## Environment Configuration
+**Create a Virtual Environment:**
 
-In this repository, you will find a file named `.env`.
-This file contains sensitive configuration information and is typically not included in version control systems.
-However, I've included it here for your convenience to help you get started quickly without having to create it yourself.
+```bash
+python -m venv shorten && source shorten/bin/activate && cd shorten/
+```
+
+**Install Production Requirements:**
+
+```bash
+pip install -r requirements.txt
+```
+
+**Deactivate the Virtual Environment:**
+
+```bash
+deactivate
+```
+
+**Build the Database:**
+
+```sh
+python database.py
+```
+
+**Run the App with Gunicorn (Inside a tmux Session):**
+
+```bash
+tmux new-session -d 'gunicorn -b 127.0.0.1:5000 app:app'
+```
 
 ## Contributing
 
