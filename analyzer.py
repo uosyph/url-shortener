@@ -102,11 +102,8 @@ class Analyzer:
             str: The client's IP address.
         """
 
-        if request.environ.get("HTTP_X_FORWARDED_FOR") is None:
-            return request.environ["REMOTE_ADDR"]
-        else:
-            # if behind a proxy
-            return request.environ["HTTP_X_FORWARDED_FOR"]
+        client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        return client_ip
 
     def get_location(self):
         """
