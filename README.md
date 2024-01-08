@@ -7,8 +7,6 @@ driven by the frustration of sharing convoluted web addresses,
 embarked on a quest to simplify the digital landscape.
 This is the tale of "Shorten," a URL shortener born out of necessity.
 
-[Try it here](http://54.236.51.83/)
-
 ## Table of Contents
 
 - [Features](#features)
@@ -161,7 +159,7 @@ SECRET_KEY=your_secret_key
 **Clone the Repository:**
 
 ```sh
-git clone https://github.com/yousafesaeed/url-shortener.git && cd url-shortener
+git clone https://github.com/uosyph/url-shortener.git && cd url-shortener
 ```
 
 **Install the Required Libraries:**
@@ -253,7 +251,7 @@ sudo systemctl restart nginx
 **Clone the Repository on the Server:**
 
 ```bash
-git clone https://github.com/yousafesaeed/url-shortener.git shorten
+git clone https://github.com/uosyph/url-shortener.git shorten
 ```
 
 **Create a Virtual Environment:**
@@ -292,20 +290,20 @@ tmux new-session -d 'gunicorn -b 127.0.0.1:5000 app:app'
 
 To fix a bug or enhance an existing feature, follow these steps:
 
-- [Fork the repo](https://github.com/yousafesaeed/url-shortener/fork)
+- [Fork the repo](https://github.com/uosyph/url-shortener/fork)
 - Create a new branch (`git checkout -b improve-feature`)
 - Make the necessary changes
 - Add changes to reflect updates
 - Commit your changes (`git commit -am 'Improve feature'`)
 - Push to the branch (`git push origin improve-feature`)
-- [Create a Pull Request](https://github.com/yousafesaeed/url-shortener/compare)
+- [Create a Pull Request](https://github.com/uosyph/url-shortener/compare)
 
 ### Bug/Feature Request
 
 If you find a bug or want to request a new feature:
 
-- For bugs, [open an issue](https://github.com/yousafesaeed/url-shortener/issues/new/choose) with details about the problem.
-- For feature requests, [open an issue](https://github.com/yousafesaeed/url-shortener/issues/new/choose) with your suggestions.
+- For bugs, [open an issue](https://github.com/uosyph/url-shortener/issues/new/choose) with details about the problem.
+- For feature requests, [open an issue](https://github.com/uosyph/url-shortener/issues/new/choose) with your suggestions.
 
 ## License
 
@@ -314,8 +312,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Author
 
 **Yousef Saeed**:
-[GitHub](https://github.com/yousafesaeed)
-[LinkedIn](https://linkedin.com/in/yousafesaeed)
-[X](https://twitter.com/yousafesaeed)
+[GitHub](https://github.com/uosyph)
+[LinkedIn](https://linkedin.com/in/uosyph)
+[X](https://twitter.com/uosyph)
 
 <p align="right"><a href="#readme-top">Back to Top</a></p>
